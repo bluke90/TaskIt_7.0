@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "481000396637",
+    "project_id": "taskit-609ea",
+    "storage_bucket": "taskit-609ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481000396637:android:52280c315045a93375fab4",
+        "android_client_info": {
+          "package_name": "com.ProtonTechnologies.TaskIt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481000396637-cjc8p7ja5hqcod5hghu9skuk1ins7gnm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB02_fZ1WEWEtNypR--W95NKLBadgW23qU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481000396637-cjc8p7ja5hqcod5hghu9skuk1ins7gnm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

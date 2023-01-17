@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskIt.DailySchedulePage"
+             Title="DailySchedulePage"
+             BackgroundColor="#353535">
+
+    <Grid RowSpacing="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Frame Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="#282828" BorderColor="Transparent" CornerRadius="0" Margin="0">
+            <Frame.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+            </Frame.Shadow>
+
+            <HorizontalStackLayout>
+                <Label Text="Filter:" TextColor="White" FontSize="16" FontAttributes="Bold" CharacterSpacing="0.50" Margin="0,7"/>
+                <Picker Title="Filter Selection" x:Name="FilterSelection" TextColor="Black" BackgroundColor="White" Margin="10,0" MinimumWidthRequest="150" HeightRequest="38" FontSize="12"/>
+            </HorizontalStackLayout>
+        </Frame>
+
+        <Frame BackgroundColor="{StaticResource Primary}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" BorderColor="Transparent" CornerRadius="0" Margin="0">
+            <Label Text="My Schedule" TextColor="White" FontSize="24" CharacterSpacing="0.50" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+        </Frame>
+
+        <!-- Task View -->
+        <ScrollView  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <VerticalStackLayout x:Name="RecurringTask_stack" Spacing="5"/>
+        </ScrollView>
+    </Grid>
+        
+       
+</ContentPage>

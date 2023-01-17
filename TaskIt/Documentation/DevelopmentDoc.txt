@@ -1,0 +1,25 @@
+﻿To Do:
+	make mainPage only retreive non recurring task  *
+	change DailySchedulePage filter options *
+	make DailySchedulePage show next occurance *
+	Add option to delete task *
+	Add input checks *
+	maybe add check button on each task to mark it as completed
+	** check if any hazards in your area might affect your scheduled tasks
+	* add location property
+		-- add location permission request
+	Calendar View * 
+	Show Task on Calendar *
+	Calendar Day View
+	Free Time Slots
+	Make Current Day Border White*
+
+
+				var button = new TapGestureRecognizer()
+			{
+				Command = new Command<int>(Button_Tapped),
+				CommandParameter = task.Id
+			};
+			
+
+			stackLayout.GestureRecognizers.Add(button);

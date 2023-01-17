@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskIt.EditTaskPage"
+             Title="EditTaskPage"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="#353535">
+    <VerticalStackLayout Spacing="5" Margin="10,20">
+
+        <Label Text="Name" TextColor="White" FontAttributes="Bold"/>
+        <Entry x:Name="TaskName_entry" BackgroundColor="White">
+            <Entry.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+            </Entry.Shadow>
+        </Entry>
+
+        <Label Text="Notes" TextColor="White" FontAttributes="Bold"/>
+        <Entry x:Name="TaskNotes_entry" BackgroundColor="White">
+            <Entry.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+            </Entry.Shadow>
+        </Entry>
+
+        <Label Text="Due Date" TextColor="White" FontAttributes="Bold" />
+        <HorizontalStackLayout Spacing="20">
+            <DatePicker x:Name="TaskDueDate_entry" BackgroundColor="White" MinimumWidthRequest="100">
+                <DatePicker.Shadow>
+                    <Shadow Brush="Black" Offset="10,10" Opacity="0.8"/>
+                </DatePicker.Shadow>
+            </DatePicker>
+            <Frame BackgroundColor="White" Padding="0" CornerRadius="0" MinimumWidthRequest="100" HasShadow="True">
+                <TimePicker TextColor="Black" x:Name="TaskDueTime_entry" HorizontalOptions="Fill"/>
+                <Frame.Shadow>
+                    <Shadow Brush="Black" Offset="10,10" Opacity="0.8"/>
+                </Frame.Shadow>
+            </Frame>
+        </HorizontalStackLayout>
+
+        <Label Text="Repeat Notification:" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+        <Picker x:Name="RepeatInterval_entry" Title="Select a How ofter to repeat notification" BackgroundColor="White" TextColor="Black">
+            <Picker.Shadow>
+                <Shadow Brush="Black" Offset="10,10" Opacity="0.8"/>
+            </Picker.Shadow>
+        </Picker>
+
+        <Label Text="Start Receiving Reminders:" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+        <Picker x:Name="StartNotification_entry" Title="Select when you want to start receiving notifications:" BackgroundColor="White" TextColor="Black">
+            <Picker.Shadow>
+                <Shadow
+                    Brush="Black" Offset="10,10" Opacity="0.8"/>
+            </Picker.Shadow>
+        </Picker>
+
+
+        <Button Text="Done" FontAttributes="Bold" Margin="0,10" Clicked="doneClicked"/>
+
+    </VerticalStackLayout>
+</ContentPage>

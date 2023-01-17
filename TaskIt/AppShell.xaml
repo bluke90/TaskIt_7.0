@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="TaskIt.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TaskIt"
+    Shell.FlyoutBehavior="Disabled"
+     Shell.TabBarBackgroundColor="{StaticResource Gray900}">
+
+    <TabBar>
+        <Tab Title="Tasks"
+             Icon="outline_task_white_24dp.png">
+            <ShellContent
+                Title="Home"
+                ContentTemplate="{DataTemplate local:MainPage}"
+                Route="MainPage" />
+        </Tab>
+
+        <Tab Title="My Schedule"
+             Icon="outline_date_range_white_24dp.png">
+            <ShellContent
+                Title="My Schedule"
+                ContentTemplate="{DataTemplate local:DailySchedulePage}"
+                Route="DailySchedulePage"/>
+        </Tab>
+
+        <Tab Title="Calendar View"
+             Icon="outline_date_range_white_24dp.png">
+            <ShellContent
+                 Title="Calendar View"
+                 ContentTemplate="{DataTemplate local:CalendarViewPage}"
+                 Route="CalendarViewPage"/>
+        </Tab>
+
+        <Tab Title="Notes"
+             Icon="outline_notes_white_24dp.png">
+            <ShellContent
+                Title="Notes"
+                ContentTemplate="{DataTemplate local:NotesPage}"
+                Route="NotesPage"/>
+        </Tab>
+    </TabBar>
+
+    <ShellContent
+        Title="Task View"
+        ContentTemplate="{DataTemplate local:TaskViewPage}"
+        Route="TaskViewPage"/>
+
+    <ShellContent
+        Title="New Task"
+        ContentTemplate="{DataTemplate local:NewTaskPage}"
+        Route="NewTaskPage"/>
+
+    <ShellContent
+        Title="Edit Task"
+        ContentTemplate="{DataTemplate local:EditTaskPage}"
+        Route="EditTaskPage"/>
+
+
+</Shell>

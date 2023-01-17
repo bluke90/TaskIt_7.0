@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskIt.NewNotesPage"
+             Title="NewNotesPage"
+             BackgroundColor="#353535">
+    <VerticalStackLayout>
+        
+        <Label Text="Title" TextColor="White" FontAttributes="Bold" FontSize="20" Margin="10,10"/>
+        <Entry x:Name="noteTitle_entry" BackgroundColor="White" Margin="10, 0"/>
+
+        <Label Text="Note" TextColor="White" FontAttributes="Bold" FontSize="20" Margin="10,10"/>
+        <Frame BackgroundColor="Transparent" ZIndex="0" Padding="0" CornerRadius="0" Margin="10, 0">
+            <Frame.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+            </Frame.Shadow>
+            <Editor x:Name="note_entry" ZIndex="1" TextColor="Black" BackgroundColor="White" VerticalTextAlignment="Start" MinimumHeightRequest="250" MinimumWidthRequest="300"/>
+        </Frame>
+
+        <Label Text="Related Task" FontAttributes="Bold" TextColor="White" FontSize="16" Margin="10,10"/>
+        <Picker HorizontalTextAlignment="Center" x:Name="RelatedTask" Title="None" BackgroundColor="White" Margin="10,0"/>
+
+        <Button Clicked="NoteComplete_clicked" Text="Complete" BackgroundColor="{StaticResource Primary}" Margin="10,25"
+                FontAttributes="Bold" FontSize="16" BorderColor="Black" BorderWidth="1"/>
+
+
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,4 @@
+﻿Future Development
+ * Add Recurring Task
+ * Have section for recurring task seperate from nonrecurring task
+ * Add Start Date to NewTaskPage

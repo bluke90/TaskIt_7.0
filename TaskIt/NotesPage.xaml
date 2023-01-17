@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskIt.NotesPage"
+             Title="Notes"
+             BackgroundColor="#353535">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        <Frame Grid.Row="0" BackgroundColor="#252525" CornerRadius="0" BorderColor="Black">
+            <VerticalStackLayout>
+            
+                <Button Text="New Note" FontAttributes="Bold" BorderColor="Black" BorderWidth="1" Clicked="newNoteClicked"/>
+           
+            </VerticalStackLayout>
+        </Frame>
+    
+        <VerticalStackLayout Grid.Row="1"
+                             x:Name="noteStack">
+            
+            
+        </VerticalStackLayout>
+        
+    </Grid>
+</ContentPage>

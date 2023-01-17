@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskIt.TaskViewPage"
+             Title="TaskViewPage"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="#353535">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <VerticalStackLayout Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Spacing="2" Margin="0, 10">
+
+            <Frame BackgroundColor="{StaticResource Primary}" BorderColor="Black" Margin="2,0" >
+                <VerticalStackLayout>
+                    <Label Text="Name:" TextColor="White" FontSize="Header" FontAttributes="Bold"/>
+                    <Label x:Name="name_label" TextColor="White"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="{StaticResource Primary}" BorderColor="Black" Margin="2,0">
+                <VerticalStackLayout>
+                    <Label Text="Notes:" TextColor="White" FontSize="Header" FontAttributes="Bold"/>
+                    <Label x:Name="notes_label" TextColor="White"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="{StaticResource Primary}" BorderColor="Black" Margin="2,0">
+                <VerticalStackLayout>
+                    <Label Text="Start Date:" TextColor="White" FontSize="Header" FontAttributes="Bold"/>
+                    <Label x:Name="startDate_label" TextColor="White"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="{StaticResource Primary}" BorderColor="Black" Margin="2,0" x:Name="dueDate_frame">
+                <VerticalStackLayout>
+                    <Label Text="Due Date:" TextColor="White" FontSize="Header" FontAttributes="Bold"/>
+                    <Label x:Name="dueDate_label" TextColor="White"/>
+                </VerticalStackLayout>
+            </Frame>
+            
+            <Frame BackgroundColor="{StaticResource Primary}" BorderColor="Black" Margin="2,0" x:Name="nextDate_frame" IsVisible="false">
+                <VerticalStackLayout>
+                    <Label Text="Next Occurance:" TextColor="White" FontSize="Header" FontAttributes="Bold"/>
+                    <Label x:Name="nextDate_label" TextColor="White"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="{StaticResource Primary}" BorderColor="Black" Margin="2,0">
+                <VerticalStackLayout>
+                    <Label Text="Started:" TextColor="White" FontSize="Header" FontAttributes="Bold"/>
+                    <Label x:Name="started_label"/>
+                </VerticalStackLayout>
+            </Frame>
+
+        
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10">
+
+            <Button x:Name="complete_btn" Text="Completed" FontAttributes="Bold" Margin="4,0" Clicked="completedClicked" BorderColor="Black" BorderWidth="1"/>
+            <Button x:Name="delete_btn" Text="Delete" FontAttributes="Bold" Margin="4,0" Clicked="deleteClicked" BorderColor="Black" BorderWidth="1" IsVisible="false"/>
+
+            <Button Text="Edit" FontAttributes="Bold" Margin="4,0" Clicked="editClicked" BorderColor="Black" BorderWidth="1"/>
+
+            <Button Text="Done" FontAttributes="Bold" Clicked="doneClicked" Margin="4,0" BorderColor="Black" BorderWidth="1"/>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10">
+
+            <Button Text="Start" FontAttributes="Bold" Margin="4,0" Clicked="startTaskClicked" BorderColor="Black" BorderWidth="1"/>
+
+        </VerticalStackLayout>
+
+    </Grid>
+    
+    
+</ContentPage>

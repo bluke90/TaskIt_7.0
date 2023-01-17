@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskIt.NewTaskPage"
+             Title="New Task"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="#353535">
+    <ScrollView>
+    <VerticalStackLayout Spacing="5" Margin="10,10">
+        <!--Title entry Group-->
+        <Label Text="Name" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+        <Entry x:Name="TaskName_entry" BackgroundColor="White" TextColor="Black"/>
+        <!-- Description entry Group -->
+        <Label Text="Notes" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+        <Frame BackgroundColor="Transparent" ZIndex="0" Padding="0" CornerRadius="0">
+            <Editor x:Name="TaskNotes_entry" ZIndex="1" TextColor="Black" BackgroundColor="White" VerticalTextAlignment="Start" MinimumHeightRequest="250" MinimumWidthRequest="300"/>
+            <Frame.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+            </Frame.Shadow>
+        </Frame>
+        <!-- DateTime Selection Grid -->
+        <Grid RowSpacing="5" ColumnSpacing="5" Margin="0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <!-- Start Date Group -->
+            <Label Grid.Column="0" Grid.Row="0" Text="Start Date" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+            <HorizontalStackLayout Grid.Column="0" Grid.Row="1" Spacing="10" HorizontalOptions="Fill">
+                <DatePicker x:Name="TaskStartDate_entry" TextColor="Black" FontAttributes="Bold" BackgroundColor="White" MinimumWidthRequest="80"/>
+                <Frame CornerRadius="0" Padding="0" HorizontalOptions="FillAndExpand" MinimumWidthRequest="80">
+                    <TimePicker x:Name="TaskStartTime_entry" FontAttributes="Bold" TextColor="Black" BackgroundColor="White"/>
+                    <Frame.Shadow>
+                        <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+                    </Frame.Shadow>
+                </Frame>
+            </HorizontalStackLayout>
+            <!-- Due Date Group -->
+            <Label x:Name="DueDate_lbl" Grid.Column="1" Grid.Row="0" Text="Due Date" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+            <HorizontalStackLayout x:Name="DueDate_group" Grid.Column="1" Grid.Row="1" Spacing="10" HorizontalOptions="Fill">
+                <DatePicker x:Name="TaskDueDate_entry" TextColor="Black" FontAttributes="Bold" BackgroundColor="White" MinimumWidthRequest="80"/>
+                <Frame CornerRadius="0" Padding="0" HorizontalOptions="FillAndExpand" MinimumWidthRequest="80">
+                    <TimePicker x:Name="TaskDueTime_entry" FontAttributes="Bold" TextColor="Black" BackgroundColor="White"/>
+                    <Frame.Shadow>
+                        <Shadow
+                    Brush="Black"
+                    Offset="10,10"
+                    Opacity="0.8"/>
+                    </Frame.Shadow>
+                </Frame>
+            </HorizontalStackLayout>
+        </Grid>
+        
+        
+
+        <!-- Recurring Task CheckBox -->
+        <Label Text="Recurring Task?" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+        <CheckBox x:Name="IsRecurring" Color="White" HorizontalOptions="Start"/>
+        <!-- Recurring task interval -->
+        <Label x:Name="RepeatTaskInterval_lbl" Text="Repeat Task:" FontAttributes="Bold" TextColor="White" FontSize="16" IsVisible="false"/>
+        <Picker HorizontalTextAlignment="Center" x:Name="RepeatTaskInterval_entry" Title="Select a How ofter to repeat task" BackgroundColor="White" TextColor="Black" IsVisible="false"/>
+            <!-- Repeat Notification Selection -->
+        <Label x:Name="RepeatInterval_lbl" Text="Repeat Notification:" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+        <Picker HorizontalTextAlignment="Center" x:Name="RepeatInterval_entry" Title="Select a How ofter to repeat notification" BackgroundColor="White" TextColor="Black"/>
+        <!-- Start Notification Selection -->
+        <Label Text="Start Receiving Reminders" FontAttributes="Bold" TextColor="White" FontSize="16"/>
+        <Picker HorizontalTextAlignment="Center" x:Name="StartNotification_entry" Title="Select when you want to start receiving notifications:" BackgroundColor="White" TextColor="Black"/>
+        <!-- Submit button -->
+        <Button Text="Create Task" VerticalOptions="EndAndExpand" Margin="0,10" Clicked="CreateTaskClicked" FontAttributes="Bold" CharacterSpacing="0.75" FontSize="14"/>
+
+    </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+    
