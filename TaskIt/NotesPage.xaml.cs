@@ -6,9 +6,9 @@ public partial class NotesPage : ContentPage
 {
 	private readonly TaskContext _context;
 
-	public NotesPage()
+	public NotesPage(TaskContext context)
 	{
-		_context = new TaskContext();
+		_context = context;
 		InitializeComponent();
 	}
 

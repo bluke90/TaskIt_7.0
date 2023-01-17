@@ -8,13 +8,8 @@ using System.Threading.Tasks;
 
 namespace TaskIt.Mechanics
 {
-
-
-
-    record PeriodicUpdateServiceState(bool IsEnabled);
     public class PeriodicUpdateService : BackgroundService
     {
-
         private readonly TimeSpan _period = TimeSpan.FromSeconds(5);
         private readonly ILogger<PeriodicUpdateService> _logger;
         private readonly IServiceScopeFactory _factory;
@@ -42,7 +37,8 @@ namespace TaskIt.Mechanics
                         await using AsyncServiceScope asyncScope = _factory.CreateAsyncScope();
                         TaskUpdateService updateService = asyncScope.ServiceProvider.GetRequiredService<TaskUpdateService>();
                         // *** Start Update Actions here ***
-                        await updateService.UpdateNextOccurances();
+                            // 1. Update Next Occurances for Recurring Task
+                        await updateService.UpdateNextOccurances(); 
 
                         // *** End Update Actions ***
                         _executionCount++;
@@ -57,7 +53,7 @@ namespace TaskIt.Mechanics
                 }
             }
         }
-
-
     }
+
+    record PeriodicUpdateServiceState(bool IsEnabled);
 }

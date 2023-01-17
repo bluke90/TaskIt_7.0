@@ -1,8 +1,3 @@
-// using Android.App;
-// using Android.Content;
-// using AndroidX.Core.App;
-// using Plugin.Firebase.Android;
-// using Plugin.Firebase.CloudMessaging;
 using Microsoft.EntityFrameworkCore;
 using TaskIt.Data;
 using TaskIt.Mechanics;
