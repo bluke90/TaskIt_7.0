@@ -17,8 +17,8 @@ public partial class DailySchedulePage : ContentPage
         "Order by occurance"
     };
 
-    public DailySchedulePage() {
-        _context = new TaskContext();
+    public DailySchedulePage(TaskContext context) {
+        _context = context;
         
         InitializeComponent();
 

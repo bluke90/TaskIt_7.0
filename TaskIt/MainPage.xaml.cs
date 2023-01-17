@@ -17,10 +17,10 @@ public partial class MainPage : ContentPage
 		"Due Date",
 		"Title"
 	};
-	public MainPage()
+	public MainPage(TaskContext context)
 	{
-		 		
-        _context = new TaskContext();
+		_context = context;
+        //_context = new TaskContext();
         InitializeComponent();
         FilterSelection.ItemsSource = FilterOptions;
 		FilterSelection.SelectedIndexChanged += FilterSelection_SelectedIndexChanged;

@@ -10,11 +10,10 @@ public partial class CalendarViewPage : ContentPage
 
     private readonly TaskContext _context;
 
-    public CalendarViewPage()
-	{
-        _context = new TaskContext();
-		InitializeComponent();
-	}
+    public CalendarViewPage(TaskContext context) {
+        _context = context;
+        InitializeComponent();
+    }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args) {
         base.OnNavigatedTo(args);
