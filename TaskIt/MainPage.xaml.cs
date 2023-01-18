@@ -9,8 +9,8 @@ namespace TaskIt;
 
 public partial class MainPage : ContentPage
 {
-
 	private readonly TaskContext _context;
+
 	private List<string> FilterOptions = new List<string>()
 	{
 		"Start Date",
@@ -20,19 +20,22 @@ public partial class MainPage : ContentPage
 	public MainPage(TaskContext context)
 	{
 		_context = context;
-        //_context = new TaskContext();
+        
         InitializeComponent();
+
+		// Set Component Data
         FilterSelection.ItemsSource = FilterOptions;
 		FilterSelection.SelectedIndexChanged += FilterSelection_SelectedIndexChanged;
-		//PopulateTask();
 	}
 
-	private void FilterSelection_SelectedIndexChanged(object sender, EventArgs e) {
-		PopulateTask();
-	}
+    // Any Overrides
+    protected override void OnNavigatedTo(NavigatedToEventArgs args) {
+        base.OnNavigatedTo(args);
+        PopulateTask();
+    }
 
-	protected override void OnNavigatedTo(NavigatedToEventArgs args) {
-		base.OnNavigatedTo(args);
+    private void FilterSelection_SelectedIndexChanged(object sender, EventArgs e) {
+		// Repopulate UI with task after being sorted
 		PopulateTask();
 	}
 
@@ -44,7 +47,8 @@ public partial class MainPage : ContentPage
             Tasks.Clear();
         }
         TasksStack.Clear();
-		// get task from db
+
+		// get task from db sorted based on filter selection
 		if (FilterSelection.SelectedItem == null) {
 			Tasks = _context.ToDoTasks.Where(m=> m.Finished == false).Where(m => m.RecurringTask == false).ToList();
 		} else {
@@ -103,18 +107,21 @@ public partial class MainPage : ContentPage
 				CommandParameter = task.Id
 			};
 			
-
+			// Make StackLayout Clickable
 			stackLayout.GestureRecognizers.Add(button);
+			// Add labels to stack
 			stackLayout.Add(label_name);
 			stackLayout.Add(label_due);
+			// set frame content to StackLout
 			frame.Content = stackLayout;
+			// Add frame to screen
 			TasksStack.Add(frame);
 		}
 
 	}
 
+	// Task Clicked Event Handler; Go to TaskViewPage for selected task
 	private async void Button_Tapped(int id) {
-		//App.Current.MainPage = new TaskViewPage(id, _context);
 		try {
 			await Navigation.PushAsync(new TaskViewPage(id, _context));
 		} catch (NullReferenceException e) {
@@ -122,13 +129,13 @@ public partial class MainPage : ContentPage
 			return;
 		}
 	}
-
+	// New task button event handler; go to NewTaskPage
 	public async void NewTaskBtnClicked(object sender, EventArgs e) {
 		//App.Current.MainPage = new NewTaskPage();
 		await Navigation.PushAsync(new NewTaskPage());
 		return;
 	}
-
+	// Navigate to completed task button event handler; go to CompletedTaskPage
 	public async void CompletedTaskButton_Tapped(object sender, EventArgs args) {
 		await Navigation.PushAsync(new CompletedTaskPage(_context));
 	}

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace TaskIt.Mechanics
 {
+    // *!* Depreciated - Remove *!* 
     internal sealed class HostedServiceExecutor
     {
         private readonly IEnumerable<IHostedService> _services;

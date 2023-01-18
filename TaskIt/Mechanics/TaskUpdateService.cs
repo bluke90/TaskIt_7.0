@@ -10,6 +10,9 @@ using TaskIt.Mechanics.Models;
 
 namespace TaskIt.Mechanics
 {
+    /// <summary>
+    /// Service for performing any TaskObj Updates needed - See PeriodicUpdateService.cs
+    /// </summary>
     public class TaskUpdateService
     {
         private readonly TaskContext _context;
@@ -21,7 +24,8 @@ namespace TaskIt.Mechanics
         }
 
         public async Task UpdateNextOccurances() {
-
+            _logger.LogInformation($"[TaskUpdateService] Starting UpdateNextOccurance Task...");
+            // Delay and init taskUpdated count
             await Task.Delay(100);
             int taskUpdated = 0;
             
@@ -30,7 +34,7 @@ namespace TaskIt.Mechanics
             
             // update recurringTask NextOccurance
             foreach (var task in list) {
-                if (task.NextOccurance < DateTime.Now) { 
+                if (task.NextOccurance < DateTime.Now) {     // If current date is past the stored NextOccurance THEN update
                     task.NextOccurance = task.GetNextOccuranceOfTask();
                     taskUpdated++;
                 }

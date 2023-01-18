@@ -17,12 +17,12 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
+        // Register DB Context to DI
 		builder.Services.AddDbContext<TaskContext>();
+        // Register Services to DI
         builder.RegisterServices();
+        // Register Pages to DI
         builder.RegisterPages();
-		
-        //builder.Services.AddHostedService<PeriodicUpdateService>();
-
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -56,7 +56,6 @@ public static class MauiProgram
         builder.Services.AddTransient<NewNotesPage>();
         builder.Services.AddTransient<TaskViewPage>();
         builder.Services.AddTransient<NewTaskPage>();
-
 
         return builder;
     }

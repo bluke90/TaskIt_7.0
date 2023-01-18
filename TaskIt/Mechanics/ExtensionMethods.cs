@@ -16,6 +16,12 @@ namespace TaskIt.Mechanics
             return dictionary.OrderBy(kvp => kvp.Value);
         }
 
+        /// <summary>
+        /// Get List of ToDoTasks for a specified Date
+        /// </summary>
+        /// <param name="context">DataBase Context</param>
+        /// <param name="date">Date to retreive list of ToDoTask for</param>
+        /// <returns>List of ToDoTask for specified Date</returns>
         public static List<ToDoTask> GetTaskForDate(this TaskContext context, DateTime date) {
             
             // Get list of task for date

@@ -11,7 +11,7 @@ namespace TaskIt.Mechanics.Models
     public class ToDoTask
     {
         public int Id { get; set; }
-
+        // Generic Properties
         public string Name { get; set; }
         public string Notes { get; set; }
         public DateTime StartDate { get; set; }
@@ -30,65 +30,107 @@ namespace TaskIt.Mechanics.Models
 
     public static class ToDoTaskUtils
     {
-        public static DateTime GetNextOccuranceOfTask(this ToDoTask task) {
+        /// <summary>
+        /// Get the date for the next time a recurring task is supposed to occure
+        /// </summary>
+        /// <param name="task">ToDoTask Instance</param>
+        /// <returns>DateTime of next occurance</returns>
+        public static DateTime GetNextOccuranceOfTask(this ToDoTask task)
+        {
+            // Init the next occurance var; add 25sec to account for UI refreash period
             DateTime nextOccurance = task.StartDate + TimeSpan.FromSeconds(25);
 
+            // Continue to add the repeat interval to nextOccurance until it is greater than the current time
             while (nextOccurance < DateTime.Now) {
                 nextOccurance += task.RecurringInterval;
             }
-
             return nextOccurance;
         }
 
-        public static List<ToDoTask> OrderByNextOccurance(this List<ToDoTask> listOfTask) {
+        /// <summary>
+        /// Order a list of ToDoTask in assending order, for recurring task use nextOccurance, for non-recurring task use DueDate
+        /// </summary>
+        /// <param name="listOfTask"> List to reorder </param>
+        /// <returns> A list of ToDoTask ordered by NextOccurance/DueDate </returns>
+        public static List<ToDoTask> OrderByNextOccurance(this List<ToDoTask> listOfTask)
+        {
+            // create dictionary for toDoTask and NextOccurance
             Dictionary<ToDoTask, DateTime> taskWithNextOccurance = new Dictionary<ToDoTask, DateTime>();
-
+            
+            // add task to dictionary
             foreach(var task in listOfTask) {
                 taskWithNextOccurance.Add(task, (task.RecurringTask ? task.GetNextOccuranceOfTask(): task.DueDate));
             }
 
+            // get a reordered Enumerable and copy the keys<ToDoTask> to a list
             var orderedEnum = taskWithNextOccurance.SortByValue();
             var orderedList = new List<ToDoTask>();
             foreach (var keyValue in orderedEnum) {
                 orderedList.Add(keyValue.Key);
             }
-
             return orderedList;
-
         }
 
-
-        public static async Task GenerateNotificationIdAsync(this ToDoTask task) {
+        /// <summary>
+        /// Generate a random NotificationID and verify it doesnt match any currently pending notifications
+        /// </summary>
+        /// <param name="task">ToDoTask to set the notificationId for</param>
+        /// <returns>Task Object</returns>
+        public static async Task GenerateNotificationIdAsync(this ToDoTask task)
+        {
+            // Initialize the id variable and random number generator
             Random rand = new Random();
-            bool idIsUnique = false;
-            var id = 0;
-            while (idIsUnique == false) {
-                id = rand.Next(1000, 9999);
-                if (!await NotificationService.CheckIfNotificationIdExistAsync(id)) { 
-                    idIsUnique = true;
-                    break;                
-                }
-            }
+            int id;
+
+            // Define the upper limit of the id range
+            const int upperLimit = 10000; 
+
+            do {
+                // Generate a random integer between 1 and upperLimit
+                id = rand.Next(1, upperLimit);
+                // Check if the generated id already exists in pending notifications
+            } while (await NotificationService.CheckIfNotificationIdExistAsync(id));
+
+            // Set task.NotificationId
             task.NotificationId = id;
         }
+
+        /// <summary>
+        /// Asynchronously Schedule a LocalNotification for the refrenced ToDoTask
+        /// </summary>
+        /// <param name="task">ToDoTask to schedule notification for</param>
+        /// <returns>The Notification ID</returns>
         public static async Task<int> ScheduleNotificationAsync(this ToDoTask task)
         {
+            // Generate a unique notification id for the task
             await task.GenerateNotificationIdAsync();
 
+            // Create the title and message for the notification
             string title = $"To Do Task: {task.Name}";
             string msg = $"Task Due on {task.DueDate.ToString("g")}";
- 
+
+            // Schedule the notification with the generated id, title, message, and task details
             var request = NotificationService.ScheduleNotification(task.NotificationId, title, msg, 42, task.NotificationStartDate, task.NotificationRepeatInterval);
-            // -- Debug
+            
+            // -- Debug: Prints the notification information to the console 
             task.Debug_PrintNotificationInfoToConsole(request);
             return task.NotificationId;
         }
 
-        public static async Task<NotificationRequest> GetNotificationAsync(this ToDoTask task) {
+        /// <summary>
+        /// Get the NotificationRequest Instance for refrenced task
+        /// </summary>
+        /// <param name="task">ToDoTask instance to get notification for</param>
+        /// <returns>Notification Request for specified ToDoTask</returns>
+        public static async Task<NotificationRequest> GetNotificationAsync(this ToDoTask task) 
+        {
             var notification = await NotificationService.GetNotificationAsync(task.NotificationId);
             return notification;
         }
 
+        /// <summary>
+        /// Dictionary for Repeat Interval DropDown Selection list [Key=StringExpression; Value=TimeSpanExpression]
+        /// </summary>
         public static Dictionary<string, TimeSpan> RepeatIntervalSelection = new Dictionary<string, TimeSpan>
         {
         {"None", TimeSpan.Zero },
@@ -97,7 +139,9 @@ namespace TaskIt.Mechanics.Models
         {"Twice a Week", TimeSpan.FromDays(4) },
         {"Weekly", TimeSpan.FromDays(7) }
         };
-
+        /// <summary>
+        /// Dictionary for selecting the start date for notifications to start [Key=StringExpression; Value=TimeSpanExpression]
+        /// </summary>
         public static Dictionary<string, TimeSpan> NotificationStartDateSelection = new Dictionary<string, TimeSpan>
         {
         {"On Notification Start Date", TimeSpan.Zero },

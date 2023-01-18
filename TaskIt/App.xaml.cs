@@ -4,21 +4,35 @@ namespace TaskIt;
 
 public partial class App : Application
 {
+	// DI Instances
 	private readonly PeriodicUpdateService _updateService;
-	private CancellationTokenSource source { get; set; }
-	private CancellationToken token { get; set; }
 
 
 	public App(PeriodicUpdateService updateService)
 	{
-		source = new CancellationTokenSource();
-		token = source.Token;
+		// Set DI Instances
 		_updateService = updateService;
-		_updateService.IsEnabled = true;
-		_updateService.StartAsync(token);
 
+		// Start Services
+		InitializeServices();
+
+		// Proceed with startup
 		InitializeComponent();
-
 		MainPage = new AppShell();
 	}
+	/// <summary>
+	/// Initialize Any Services that need to be started on app StartUp
+	/// </summary>
+	private void InitializeServices() {
+		// Generate Cancellation Token
+        var source = new CancellationTokenSource();
+        var token = source.Token;
+
+		// Initialize Services
+		//		-- PeriodicUpdateService
+        _updateService.IsEnabled = true;
+        _updateService.StartAsync(token);
+
+    }
+
 }
