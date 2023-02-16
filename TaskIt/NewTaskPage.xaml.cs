@@ -9,6 +9,8 @@ public partial class NewTaskPage : ContentPage
 {
 	private readonly TaskContext _context;
 
+	private UserTask UserTask { get; set; }
+
 	private Dictionary<string, TimeSpan> RecurringTaskSelection = new Dictionary<string, TimeSpan>()
 	{
         {"Once a day", TimeSpan.FromHours(24) },
@@ -45,27 +47,22 @@ public partial class NewTaskPage : ContentPage
 		TaskDueTime_entry.Time = DateTime.Now.TimeOfDay;
     }
 
-	public async void CreateTaskClicked(object sender, EventArgs e) {
+	public async void CreateTaskClicked(object sender, EventArgs e) 
+	{
 		// run input checks
 		if (!RunInputChecks()) {
 			return;		
 		}
 
-		string modelName = this.TaskName_entry.Text;
-		string modelNotes = this.TaskNotes_entry.Text;
-		bool isRecurring = this.IsRecurring.IsChecked;
 		// Combine date and time pickers
-		DateTime modelDueDate = this.TaskDueDate_entry.Date + TaskDueTime_entry.Time;
+		DateTime modelEndDate = this.TaskDueDate_entry.Date + TaskDueTime_entry.Time;
 		DateTime modelStartDate = this.TaskStartDate_entry.Date + TaskStartTime_entry.Time;
-		
-		// generate notification id
-        Random random = new Random();
-        var notificationId = random.Next(1000, 9999);
-		
+				
 		// get selected repeat interval for notification ** maybe add this to a PickerChanged Event and assign to variable to increase performance **
 		var repeatIntervalSelectionVal = RepeatInterval_entry.SelectedItem.ToString();
 		TimeSpan repeat = TimeSpan.Zero;
-		foreach (var item in ToDoTaskUtils.RepeatIntervalSelection) { 
+		foreach (var item in ToDoTaskUtils.RepeatIntervalSelection)
+		{ 
 			if (item.Key == repeatIntervalSelectionVal)
 			{
 				repeat = item.Value;
@@ -83,36 +80,37 @@ public partial class NewTaskPage : ContentPage
 				break;
 			}
 		}
-		
-		// Create task obj
-        ToDoTask task = new ToDoTask()
-		{
-			Name = modelName,
-			Notes = modelNotes,
+        // Set Base Info
+        UserTask = new UserTask()
+        {
+            Name = TaskName_entry.Text,
+            Notes = TaskNotes_entry.Text,
+            IsRecurring = IsRecurring.IsChecked,
 			StartDate = modelStartDate,
-			DueDate = isRecurring ? DateTime.MinValue : modelDueDate,
-			NotificationId = notificationId,
-			RecurringTask = isRecurring
-		};
-		// set task *NotificationStartDate* & *RecurringInterval* based on if the task is a recurring task
-		 if (task.RecurringTask) {
-			// Get value of selection from value dictionary
-			task.RecurringInterval = RecurringTaskSelection.Where(m => m.Key == RepeatTaskInterval_entry.SelectedItem.ToString()).FirstOrDefault().Value;
-			task.NextOccurance = task.StartDate + task.RecurringInterval;
-            task.NotificationStartDate = task.StartDate - start;
-			task.NotificationRepeatInterval = task.RecurringInterval;
+			EndDate = modelEndDate
+        };
+
+        if (UserTask.IsRecurring) {
+			UserTask.BuildRecurring();
+            UserTask.Recurring.RecurringInterval = RecurringTaskSelection.Where(m => m.Key == RepeatTaskInterval_entry.SelectedItem.ToString()).FirstOrDefault().Value;
+            UserTask.Recurring.NextOccurance = UserTask.StartDate + UserTask.Recurring.RecurringInterval;
+            UserTask.Notification.StartDate = UserTask.StartDate - start;
+            UserTask.Notification.RepeatInterval = UserTask.Recurring.RecurringInterval;
         } else {
-			task.NotificationRepeatInterval = repeat;
-            task.NotificationStartDate = modelDueDate - start;
+			UserTask.BuildNonRecurring();
+			UserTask.StartDate = modelStartDate + UserTask.Notification.RepeatInterval;
+            UserTask.Notification.RepeatInterval = repeat;
+            UserTask.Notification.StartDate = modelEndDate - start;
         }
 
-		// Schedule notification
-		await task.ScheduleNotificationAsync(); 
+        // Schedule notification
+        await UserTask.GenerateNotificationIdAsync();
+        await UserTask.ScheduleNotificationAsync(); 
 		// add task obj to db and save
-		_context.ToDoTasks.Add(task);
+		_context.UserTasks.Add(UserTask);
 		_context.SaveChanges();
 		// verify task saved to db
-		await VerifyTaskSaved(task);
+		await VerifyTaskSaved(UserTask);
 		//return to previous page
 		await Navigation.PopAsync();
 	}
@@ -155,9 +153,9 @@ public partial class NewTaskPage : ContentPage
 	/// </summary>
 	/// <param name="task">Task to verify saved</param>
 	/// <returns></returns>
-	private async Task VerifyTaskSaved(ToDoTask task) {
-		if (!_context.ToDoTasks.Any(m => m.Id == task.Id)) {
-			await _context.ToDoTasks.AddAsync(task);
+	private async Task VerifyTaskSaved(UserTask task) {
+		if (!_context.UserTasks.Any(m => m.Id == task.Id)) {
+			await _context.UserTasks.AddAsync(task);
 			await _context.SaveChangesAsync();
 		}
 	}

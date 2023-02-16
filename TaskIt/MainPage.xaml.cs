@@ -39,7 +39,7 @@ public partial class MainPage : ContentPage
 		PopulateTask();
 	}
 
-	private List<ToDoTask> Tasks { get; set; }
+	private List<UserTask> Tasks { get; set; }
 
 	public void PopulateTask() {
 		// clear previous task
@@ -50,26 +50,26 @@ public partial class MainPage : ContentPage
 
 		// get task from db sorted based on filter selection
 		if (FilterSelection.SelectedItem == null) {
-			Tasks = _context.ToDoTasks.Where(m=> m.Finished == false).Where(m => m.RecurringTask == false).ToList();
+			Tasks = _context.UserTasks.Where(m=> m.Finished == false).Where(m => m.IsRecurring == false).ToList();
 		} else {
 			switch (FilterSelection.SelectedItem.ToString()) {
 				case "Start Date":
-					Tasks = _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == false).OrderBy(m => m.StartDate).ToList();
+					Tasks = _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == false).OrderBy(m => m.StartDate).ToList();
 					break;
 				case "Due Date":
-					Tasks = _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == false).OrderBy(m => m.DueDate).ToList();
+					Tasks = _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == false).OrderBy(m => m.EndDate).ToList();
 					break;
 				case "Title":
-					Tasks = _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == false).OrderBy(m => m.Name).ToList();
+					Tasks = _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == false).OrderBy(m => m.Name).ToList();
 					break;
 				default:
-					Tasks = _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == false).ToList();
+					Tasks = _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == false).ToList();
 					break;
 			}
 		}
 
 		// foreach task, create a display obj
-		foreach (ToDoTask task in Tasks) {
+		foreach (UserTask task in Tasks) {
 
 			var frame = new Frame()
 			{
@@ -95,7 +95,7 @@ public partial class MainPage : ContentPage
 
 			var label_due = new Label()
 			{
-				Text = $"{task.DueDate.ToString("M/d/y h:mm tt")}",
+				Text = $"{task.EndDate.ToString("M/d/y h:mm tt")}",
 				VerticalOptions = LayoutOptions.End,
 				TextColor = Colors.White
 			};
@@ -125,6 +125,7 @@ public partial class MainPage : ContentPage
 		try {
 			await Navigation.PushAsync(new TaskViewPage(id, _context));
 		} catch (NullReferenceException e) {
+			Console.WriteLine(e.Message);
 			PopulateTask();
 			return;
 		}

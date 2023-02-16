@@ -6,7 +6,7 @@ namespace TaskIt;
 public partial class CompletedTaskPage : ContentPage
 {
 	private readonly TaskContext _context;
-	private List<ToDoTask> Tasks { get; set; }
+	private List<UserTask> Tasks { get; set; }
     private List<string> FilterOptions = new List<string>()
     {
         "Start Date",
@@ -16,7 +16,7 @@ public partial class CompletedTaskPage : ContentPage
     public CompletedTaskPage(TaskContext context)
 	{
 		_context = context;
-		Tasks = _context.ToDoTasks.Where(m => m.Finished == true).ToList();
+		Tasks = _context.UserTasks.Where(m => m.Finished == true).ToList();
 		InitializeComponent();
         FilterSelection.ItemsSource = FilterOptions;
     }
@@ -34,25 +34,25 @@ public partial class CompletedTaskPage : ContentPage
         TasksStack.Clear();
         // get task from db
         if (FilterSelection.SelectedItem == null) {
-            Tasks = _context.ToDoTasks.Where(m => m.Finished == true).ToList();
+            Tasks = _context.UserTasks.Where(m => m.Finished == true).ToList();
         } else {
             switch (FilterSelection.SelectedItem.ToString()) {
                 case "Start Date":
-                    Tasks = _context.ToDoTasks.Where(m => m.Finished == true).OrderBy(m => m.StartDate).ToList();
+                    Tasks = _context.UserTasks.Where(m => m.Finished == true).OrderBy(m => m.StartDate).ToList();
                     break;
                 case "Due Date":
-                    Tasks = _context.ToDoTasks.Where(m => m.Finished == true).OrderBy(m => m.DueDate).ToList();
+                    Tasks = _context.UserTasks.Where(m => m.Finished == true).OrderBy(m => m.EndDate).ToList();
                     break;
                 case "Title":
-                    Tasks = _context.ToDoTasks.Where(m => m.Finished == true).OrderBy(m => m.Name).ToList();
+                    Tasks = _context.UserTasks.Where(m => m.Finished == true).OrderBy(m => m.Name).ToList();
                     break;
                 default:
-                    Tasks = _context.ToDoTasks.Where(m => m.Finished == true).ToList();
+                    Tasks = _context.UserTasks.Where(m => m.Finished == true).ToList();
                     break;
             }
         }
         // foreach task, create a display obj
-        foreach (ToDoTask task in Tasks) {
+        foreach (UserTask task in Tasks) {
 
             var frame = new Frame()
             {
@@ -78,7 +78,7 @@ public partial class CompletedTaskPage : ContentPage
 
             var label_due = new Label()
             {
-                Text = $"{task.DueDate.ToString("M/d/y h:mm tt")}",
+                Text = $"{task.EndDate.ToString("M/d/y h:mm tt")}",
                 VerticalOptions = LayoutOptions.End,
                 TextColor = Colors.White
             };

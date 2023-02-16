@@ -8,18 +8,39 @@
 	** check if any hazards in your area might affect your scheduled tasks
 	* add location property
 		-- add location permission request
+		-- if user is not at location of task on start dateTime, send notifications
 	Calendar View * 
 	Show Task on Calendar *
-	Calendar Day View
+	Calendar Day View - !WIP!
 	Free Time Slots
 	Make Current Day Border White*
 
 
-				var button = new TapGestureRecognizer()
-			{
-				Command = new Command<int>(Button_Tapped),
-				CommandParameter = task.Id
-			};
-			
+	1. Seperate ToDoTask into UserTask.Recurring and UserTask.NonRecurring
 
-			stackLayout.GestureRecognizers.Add(button);
+	2. Restructure Notification System
+
+	3. For recurring task add a days of the week selection and use the recurring interval for how many times a day they want to 
+		* How many times each selected day
+		* =Foreach repeated time, add a time selection
+		* Leave option for repeat by time interval
+
+	4. For non-recurring task, add option to add remove start date or due date
+
+	Task Builder
+		- Youd have a quick task which is just a basic reminder or youd have the option to
+		- Build your Task
+
+
+	What are reminders and what is its elements:
+		- Other words for 'Reminders': 
+
+		- Different ways of applying a time to a Reminder/Task
+			* Short term
+				+ I need to go shopping today
+				+ With time limit: i need to go shopping before work at 5pm
+			* Regular reminder
+				+ i have a test next Tuesday at 1:30PM
+				+ 
+
+	Add Routine builder on app first start

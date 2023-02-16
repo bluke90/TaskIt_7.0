@@ -12,7 +12,7 @@ namespace TaskIt.Mechanics.Models
         public string Title { get; set; }
         public string Details { get; set; }
 #nullable enable
-        public ToDoTask? ToDoTask { get; set; }
+        public UserTask? UserTask { get; set; }
 
     }
 }

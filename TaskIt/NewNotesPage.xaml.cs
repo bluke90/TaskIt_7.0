@@ -8,16 +8,16 @@ public partial class NewNotesPage : ContentPage
 {
 	private readonly TaskContext _context;
 
-	private List<ToDoTask> Tasks { get; set; }
+	private List<UserTask> Tasks { get; set; }
 
 	public NewNotesPage(TaskContext context)
 	{
 		_context = context;
 		InitializeComponent();
 		
-		Tasks = _context.ToDoTasks.Where(m => m.Finished == false).ToList();
+		Tasks = _context.UserTasks.Where(m => m.Finished == false).ToList();
 		var selectionListName = Tasks.Select(m => m.Name).ToList();
-		var selectionListDue = Tasks.Select(m => m.DueDate).ToList();
+		var selectionListDue = Tasks.Select(m => m.EndDate).ToList();
 		var selectionList = new List<string>();
 		for (int i = 0; i < Tasks.Count; i++) {
 			selectionList.Add($"{selectionListName[i]}  |  {selectionListDue[i].ToString("M/d/y h:mm tt")}");
@@ -42,13 +42,13 @@ public partial class NewNotesPage : ContentPage
 			Details = note
 		};
 
-		if (task != null) { noteObj.ToDoTask = task; }
+		if (task != null) { noteObj.UserTask = task; }
 
 		_context.Notes.Add(noteObj);
 		await _context.SaveChangesAsync();
 	}
 
-	private ToDoTask GetSelectedTask()
+	private UserTask GetSelectedTask()
 	{
 		foreach(var task in Tasks)
 		{

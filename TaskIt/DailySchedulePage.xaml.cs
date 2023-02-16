@@ -8,7 +8,7 @@ public partial class DailySchedulePage : ContentPage
 {
     private readonly TaskContext _context;
 
-    private List<ToDoTask> Tasks { get; set; }
+    private List<UserTask> Tasks { get; set; }
 
     private List<string> FilterOptions = new List<string>()
     {
@@ -46,19 +46,19 @@ public partial class DailySchedulePage : ContentPage
         // Get & Sort Task
         switch (FilterSelection.SelectedItem.ToString()) {
             case "Start Date":
-                Tasks = await _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == true).OrderBy(m => m.StartDate).ToListAsync();
+                Tasks = await _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == true).OrderBy(m => m.StartDate).ToListAsync();
                 break;
             case "Order by occurance":
-                Tasks = await _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == true).ToListAsync();
+                Tasks = await _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == true).ToListAsync();
                 Tasks = Tasks.OrderByNextOccurance();
                 break;
             case "Title":
-                Tasks = await _context.ToDoTasks.Where(m => m.Finished == false).Where(m => m.RecurringTask == true).OrderBy(m => m.Name).ToListAsync();
+                Tasks = await _context.UserTasks.Where(m => m.Finished == false).Where(m => m.IsRecurring == true).OrderBy(m => m.Name).ToListAsync();
                 break;
         }
 
         // foreach task, create a display obj
-        foreach (ToDoTask task in Tasks) {
+        foreach (UserTask task in Tasks) {
 
             var frame = new Frame()
             {

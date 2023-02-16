@@ -73,6 +73,14 @@ namespace TaskIt.Mechanics
             }
             return false;
         }
+        /// <summary>
+        ///  Reschedules Notification for provided task obj. Sets new NotificationId
+        /// </summary>
+        /// <param name="task">Task object to reschedule notification for</param>
+        public static async Task RescheduleTaskNotifcationAsync(this UserTask task) {
+            CancelNotification(task.Notification.Id);
+            await task.ScheduleNotificationAsync();
+        }
 
         /// <summary>
         /// Cancel a pending Notification
@@ -87,15 +95,15 @@ namespace TaskIt.Mechanics
         /// </summary>
         /// <param name="task">ToDoTask object</param>
         /// <param name="request">Relevent NotificationRequest object</param>
-        public static void Debug_PrintNotificationInfoToConsole(this ToDoTask task, NotificationRequest request) {
+        public static void Debug_PrintNotificationInfoToConsole(this UserTask task, NotificationRequest request) {
             // print info from task obj
             Console.WriteLine($"Task[{task.Name}:{task.Id}] Notification Info: ");
             Console.WriteLine($"    From Task Obj:");
-            Console.WriteLine($"    ---- StartDate => {task.StartDate.ToString()} | NotificationStartDate => {task.NotificationStartDate.ToString()}");
-            Console.WriteLine($"    ---- DueDate => {task.DueDate.ToString()}");
-            Console.WriteLine($"    ---- NotificationRepeatInterval => {task.NotificationRepeatInterval.ToString()}");
-            Console.WriteLine($"    ---- RecurringTask => {task.RecurringTask.ToString()}");
-            Console.WriteLine($"    ---- RecurringInterval => {task.RecurringInterval.ToString()}");
+            Console.WriteLine($"    ---- StartDate => {task.StartDate.ToString()} | NotificationStartDate => {task.Notification.StartDate.ToString()}");
+            Console.WriteLine($"    ---- DueDate => {task.EndDate.ToString()}");
+            Console.WriteLine($"    ---- NotificationRepeatInterval => {task.Notification.RepeatInterval.ToString()}");
+            Console.WriteLine($"    ---- RecurringTask => {task.IsRecurring.ToString()}");
+            Console.WriteLine($"    ---- RecurringInterval => {task.IsRecurring.ToString()}");
             // print info from request obj
             Console.WriteLine($"    From Request Obj:");
             Console.WriteLine($"    ---- NotificationId => {request.NotificationId}");

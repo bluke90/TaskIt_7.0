@@ -10,7 +10,7 @@ public partial class CalendarDayPage : ContentPage
 
 	private readonly TaskContext _context;
 
-	private List<ToDoTask> DaysTasks { get; set; }
+	private List<UserTask> DaysTasks { get; set; }
 
 	public CalendarDayPage(TaskContext context, DateTime date)
 	{
@@ -40,21 +40,21 @@ public partial class CalendarDayPage : ContentPage
 	}
 
 
-	public static Frame GenerateTaskSlot(ToDoTask task) {
+	public static Frame GenerateTaskSlot(UserTask task) {
 
 		// frame
 		var frame = new Frame
 		{
-			BorderColor = task.RecurringTask ? Colors.Green : Colors.Red,
+			BorderColor = task.IsRecurring ? Colors.Green : Colors.Red,
 			CornerRadius = 5,
-			BackgroundColor = task.RecurringTask ? Colors.GreenYellow : Colors.DarkRed,
+			BackgroundColor = task.IsRecurring ? Colors.GreenYellow : Colors.DarkRed,
 			Opacity = 80
 		};
 		// stack
 		var stack = new HorizontalStackLayout{
 			Spacing = 40
 		};
-
+		 
 		// label title
 		var titleLbl = new Label
 		{
@@ -68,7 +68,7 @@ public partial class CalendarDayPage : ContentPage
 		// label time
 		var dtLbl = new Label
 		{
-			Text = task.RecurringTask ? task.GetNextOccuranceOfTask().ToString() : task.DueDate.ToString(),
+			Text = task.IsRecurring ? task.GetNextOccuranceOfTask().ToString() : task.EndDate.ToString(),
 			HorizontalOptions = LayoutOptions.End,
 			VerticalOptions = LayoutOptions.Center
 		};

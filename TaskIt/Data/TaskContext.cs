@@ -11,13 +11,22 @@ namespace TaskIt.Data
 {
     public class TaskContext : DbContext 
     {
-        public DbSet<ToDoTask> ToDoTasks { get; set; }
+        public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<Note> Notes { get; set; }
 
         public TaskContext() {
             SQLitePCL.Batteries_V2.Init();
 
             this.Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            base.OnModelCreating(modelBuilder);
+
+            // UserTask.Notification.SelectedDays
+            modelBuilder.Entity<Recurring>()
+                .Property(r => r.SelectedDays)
+                .HasColumnType("int");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

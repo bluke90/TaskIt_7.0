@@ -30,12 +30,12 @@ namespace TaskIt.Mechanics
             int taskUpdated = 0;
             
             // Get list of recurring task
-            var list = await _context.ToDoTasks.Where(m => m.RecurringTask == true).ToListAsync();
+            var list = await _context.UserTasks.Where(m => m.IsRecurring == true).ToListAsync();
             
             // update recurringTask NextOccurance
             foreach (var task in list) {
-                if (task.NextOccurance < DateTime.Now) {     // If current date is past the stored NextOccurance THEN update
-                    task.NextOccurance = task.GetNextOccuranceOfTask();
+                if (task.Recurring.NextOccurance < DateTime.Now) {     // If current date is past the stored NextOccurance THEN update
+                    task.Recurring.NextOccurance = task.GetNextOccuranceOfTask();
                     taskUpdated++;
                 }
             }

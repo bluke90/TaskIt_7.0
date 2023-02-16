@@ -22,11 +22,11 @@ namespace TaskIt.Mechanics
         /// <param name="context">DataBase Context</param>
         /// <param name="date">Date to retreive list of ToDoTask for</param>
         /// <returns>List of ToDoTask for specified Date</returns>
-        public static List<ToDoTask> GetTaskForDate(this TaskContext context, DateTime date) {
+        public static List<UserTask> GetTaskForDate(this TaskContext context, DateTime date) {
             
             // Get list of task for date
-            var list = context.ToDoTasks
-                .Where(m => m.DueDate.Date == date.Date || m.NextOccurance.Date == date.Date)
+            var list = context.UserTasks
+                .Where(m => m.EndDate.Date == date.Date || m.Recurring.NextOccurance.Date == date.Date)
                 .ToList();
             // return list
             return list;
