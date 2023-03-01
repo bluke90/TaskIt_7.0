@@ -45,25 +45,31 @@
                     </Frame.Shadow>
                 </Frame>
             </HorizontalStackLayout>
+            
             <!-- Due Date Group -->
             <Label x:Name="DueDate_lbl" Grid.Column="1" Grid.Row="0" Text="Due Date" FontAttributes="Bold" TextColor="White" FontSize="16"/>
-            <HorizontalStackLayout x:Name="DueDate_group" Grid.Column="1" Grid.Row="1" Spacing="10" HorizontalOptions="Fill">
-                <DatePicker x:Name="TaskDueDate_entry" TextColor="Black" FontAttributes="Bold" BackgroundColor="White" MinimumWidthRequest="80"/>
-                <Frame CornerRadius="0" Padding="0" HorizontalOptions="FillAndExpand" MinimumWidthRequest="80">
-                    <TimePicker x:Name="TaskDueTime_entry" FontAttributes="Bold" TextColor="Black" BackgroundColor="White"/>
-                    <Frame.Shadow>
-                        <Shadow
+                <HorizontalStackLayout x:Name="DueDate_group" Grid.Column="1" Grid.Row="1" Spacing="10" HorizontalOptions="Fill">
+                    <DatePicker x:Name="TaskDueDate_entry" TextColor="Black" FontAttributes="Bold" BackgroundColor="White" MinimumWidthRequest="80"/>
+                    <Frame CornerRadius="0" Padding="0" HorizontalOptions="FillAndExpand" MinimumWidthRequest="80">
+                        <TimePicker x:Name="TaskDueTime_entry" FontAttributes="Bold" TextColor="Black" BackgroundColor="White"/>
+                        <Frame.Shadow>
+                            <Shadow
                     Brush="Black"
                     Offset="10,10"
                     Opacity="0.8"/>
-                    </Frame.Shadow>
-                </Frame>
-            </HorizontalStackLayout>
-        </Grid>
-        
-        
+                        </Frame.Shadow>
+                    </Frame>
+                </HorizontalStackLayout>
+            </Grid>
 
-        <!-- Recurring Task CheckBox -->
+        <!-- Days of week selection (Recurring only) -->
+        <Label x:Name="DaysOfWeek_lbl" Text="Days of week" FontAttributes="Bold" TextColor="White" FontSize="16" IsVisible="false"/>
+        <HorizontalStackLayout x:Name="days_col_top" IsVisible="false" Spacing="4">
+        </HorizontalStackLayout>
+        <HorizontalStackLayout x:Name="days_col_bottom" IsVisible="false" Spacing="4">
+        </HorizontalStackLayout>
+
+            <!-- Recurring Task CheckBox -->
         <Label Text="Recurring Task?" TextColor="White" FontSize="16" FontAttributes="Bold"/>
         <CheckBox x:Name="IsRecurring" Color="White" HorizontalOptions="Start"/>
         <!-- Recurring task interval -->

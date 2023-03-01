@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TaskIt.Mechanics
 {
-    public class Utilities
+    public static class Utilities
     {
 
         public enum DaysOfWeek {
-            None,
             Monday,
             Tuesday,
             Wednesday,
@@ -18,9 +18,8 @@ namespace TaskIt.Mechanics
             Friday,
             Saturday,
             Sunday,
-            Everyday
+            All
         }
-
 
     }
 }

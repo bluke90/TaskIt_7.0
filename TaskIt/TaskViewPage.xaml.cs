@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore;
 using TaskIt.Data;
 using TaskIt.Mechanics.Models;
 
@@ -11,7 +12,7 @@ public partial class TaskViewPage : ContentPage
 	public TaskViewPage(int taskId, TaskContext context)
 	{
 		_context = context;
-		_task = _context.UserTasks.FirstOrDefault(m => m.Id == taskId);
+		_task = _context.UserTasks.Include(m => m.Recurring).FirstOrDefault(m => m.Id == taskId);
 		InitializeComponent();
 		PopulateData();
 

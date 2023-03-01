@@ -1,11 +1,11 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TaskIt.Mechanics.Models;
+using static TaskIt.Mechanics.Utilities;
 
 namespace TaskIt.Data
 {
@@ -26,7 +26,13 @@ namespace TaskIt.Data
             // UserTask.Notification.SelectedDays
             modelBuilder.Entity<Recurring>()
                 .Property(r => r.SelectedDays)
-                .HasColumnType("int");
+                .HasConversion(
+                    v => string.Join(",", v.Select(e => e.ToString("D")).ToArray()),
+                     v => v.Split(new[] { ',' })
+                    .Select(e => Enum.Parse(typeof(DaysOfWeek), e))
+                    .Cast<DaysOfWeek>()
+                    .ToList()
+              );
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

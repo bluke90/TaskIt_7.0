@@ -10,8 +10,6 @@ using static TaskIt.Mechanics.Utilities;
 
 namespace TaskIt.Mechanics.Models
 {
-
-
     public class UserTask {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -32,7 +30,8 @@ namespace TaskIt.Mechanics.Models
     {
         public int Id { get; set; }
         public TimeSpan RecurringInterval { get; set; }
-        public DaysOfWeek SelectedDays { get; set; }
+        // public DaysOfWeek SelectedDays { get; set; }
+        public ICollection<DaysOfWeek>? SelectedDays { get; set; }
         public int RepeatOnSelectedDay { get; set; }
         public DateTime NextOccurance { get; set; }
     }
@@ -53,14 +52,12 @@ namespace TaskIt.Mechanics.Models
     {
         public static void BuildRecurring(this UserTask task,
                                                         TimeSpan Recurring_Interval = default(TimeSpan),
-                                                        DaysOfWeek Days = DaysOfWeek.None,
                                                         int RepeatOnSelectedDay = 0)
         {
             // Build Recurring Task Instance
             task.Recurring = new Recurring()
             {
                 RecurringInterval = Recurring_Interval,
-                SelectedDays = Days,
                 RepeatOnSelectedDay = RepeatOnSelectedDay
             };
             // Build Task Notification Instance

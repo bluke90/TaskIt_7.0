@@ -32,7 +32,7 @@
 		- Build your Task
 
 
-	What are reminders and what is its elements:
+	What are reminders and what are its elements:
 		- Other words for 'Reminders': 
 
 		- Different ways of applying a time to a Reminder/Task

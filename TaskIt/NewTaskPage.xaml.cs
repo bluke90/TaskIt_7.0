@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskIt.Data;
 using TaskIt.Mechanics;
 using TaskIt.Mechanics.Models;
+using static TaskIt.Mechanics.Utilities;
 
 namespace TaskIt;
 
@@ -20,6 +21,8 @@ public partial class NewTaskPage : ContentPage
 		{"Once a Month", TimeSpan.FromDays(30) },
 		{"Twice a Month", TimeSpan.FromDays(15) }
 	};
+
+	private List<DaysOfWeek> SelectedDays = new List<DaysOfWeek>();
 
 	public NewTaskPage()
 	{
@@ -45,6 +48,8 @@ public partial class NewTaskPage : ContentPage
 		TaskStartTime_entry.Time = DateTime.Now.TimeOfDay;
         TaskDueDate_entry.Date = DateTime.Now + TimeSpan.FromDays(1);
 		TaskDueTime_entry.Time = DateTime.Now.TimeOfDay;
+
+		AddDaysOfWeekSelection();
     }
 
 	public async void CreateTaskClicked(object sender, EventArgs e) 
@@ -96,11 +101,12 @@ public partial class NewTaskPage : ContentPage
             UserTask.Recurring.NextOccurance = UserTask.StartDate + UserTask.Recurring.RecurringInterval;
             UserTask.Notification.StartDate = UserTask.StartDate - start;
             UserTask.Notification.RepeatInterval = UserTask.Recurring.RecurringInterval;
+			UserTask.Recurring.SelectedDays = SelectedDays;
         } else {
 			UserTask.BuildNonRecurring();
 			UserTask.StartDate = modelStartDate + UserTask.Notification.RepeatInterval;
             UserTask.Notification.RepeatInterval = repeat;
-            UserTask.Notification.StartDate = modelEndDate - start;
+            UserTask.Notification.StartDate = UserTask.Notification.RepeatInterval > TimeSpan.Zero ? modelStartDate + repeat : modelStartDate;
         }
 
         // Schedule notification
@@ -172,6 +178,65 @@ public partial class NewTaskPage : ContentPage
         }
     }
 
+	private void AddDaysOfWeekSelection() {
+		//build days of week selection
+		int count = 0;
+		foreach (var day in Enum.GetValues<DaysOfWeek>()) {
+			count++;
+			var frame = BuildDaySelectionFrame(day);
+
+			if (count < 5) {
+				days_col_top.Add(frame);
+			} else { days_col_bottom.Add(frame); }
+
+		}
+	}
+
+	private Frame BuildDaySelectionFrame(DaysOfWeek Day) {
+        var frame = new Frame()
+        {
+            BorderColor = Colors.Black,
+            BackgroundColor = Colors.White,
+            CornerRadius = 0,
+			Padding = new Thickness(12,14),
+			BindingContext = Day
+        };
+
+        var dayLbl = new Label()
+        {
+            Text = Day.ToString(),
+            TextColor = Colors.Black,
+            FontAttributes = FontAttributes.Bold,
+			FontSize = 14
+        };
+
+        frame.Content = dayLbl;
+
+        var recognizer = new TapGestureRecognizer()
+		{
+			Command = new Command<Frame>(DaySelected),
+			CommandParameter = frame
+        };
+
+        frame.GestureRecognizers.Add(recognizer);
+
+		return frame;
+    }
+
+	public void DaySelected(Frame day) {
+		
+		switch (SelectedDays.Contains((DaysOfWeek)day.BindingContext)) {
+			case true:
+				SelectedDays.Remove((DaysOfWeek)day.BindingContext);
+				day.BorderColor = Colors.Black;
+                break;
+			case false:
+				SelectedDays.Add((DaysOfWeek)day.BindingContext);
+				day.BorderColor = Colors.Blue;
+				break;
+		}
+	}
+
     private void ShowRecurringTaskProperties() {
 		Dispatcher.Dispatch(() => {
             DueDate_lbl.IsVisible = false;
@@ -180,6 +245,10 @@ public partial class NewTaskPage : ContentPage
             RepeatInterval_entry.IsVisible = false;
             RepeatTaskInterval_lbl.IsVisible = true;
             RepeatTaskInterval_entry.IsVisible = true;
+			// days of week selection
+			DaysOfWeek_lbl.IsVisible = true;
+			days_col_top.IsVisible = true;
+			days_col_bottom.IsVisible = true;
         });
     }
     private void ShowNonRecurringTaskProperties() {
