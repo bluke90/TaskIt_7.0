@@ -46,10 +46,47 @@ namespace TaskIt.Mechanics.Models
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
         public TimeSpan RepeatInterval { get; set; }
+        public DateTime LastScheduleUpdate { get; set; }
+        public ICollection<int>? NotificationIds { get; set; }
     }
 
     public static class UserTaskExtensions 
     {
+
+        public static async Task ScheduleRecurringNotificationsAsync(this UserTask task) {
+            if (!task.IsRecurring) return;
+
+            if (task.Recurring.SelectedDays.Count < 1) return;
+
+            foreach (var day in task.Recurring.SelectedDays) {
+                DateTime notifyTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, task.Notification.StartDate.Hour, task.Notification.StartDate.Minute, 0);
+                while (notifyTime.DayOfWeek != (DayOfWeek)day) {
+                    notifyTime += TimeSpan.FromDays(1);
+                }
+
+                // Schedule 2 weeks
+                for (int i = 0; i < 2; i++) {
+
+                    // Generate a unique notification id for the task
+                    await task.GenerateNotificationIdAsync();
+
+                    // Create the title and message for the notification
+                    string title = $"To Do Task: {task.Name}";
+                    string msg = $"Task Due on {notifyTime.ToString("g")}";
+
+                    // Schedule the notification with the generated id, title, message, and task details
+                    var request = NotificationService.ScheduleNotification(task.Notification.Id, title, msg, 42, task.Notification.StartDate, task.Notification.RepeatInterval);
+
+                    // -- Debug: Prints the notification information to the console 
+                    task.Debug_PrintNotificationInfoToConsole(request);
+
+
+                    notifyTime += TimeSpan.FromDays(7);
+                }
+            }
+            
+        }
+
         public static void BuildRecurring(this UserTask task,
                                                         TimeSpan Recurring_Interval = default(TimeSpan),
                                                         int RepeatOnSelectedDay = 0)
@@ -157,6 +194,12 @@ namespace TaskIt.Mechanics.Models
         /// <returns>The Notification ID</returns>
         public static async Task<int> ScheduleNotificationAsync(this UserTask  task)
         {
+
+            if (task.IsRecurring && task.Recurring.SelectedDays != null && task.Recurring.SelectedDays.Count > 0) {
+                await task.ScheduleRecurringNotificationsAsync();
+                return 0;
+            }
+
             // Generate a unique notification id for the task
             await task.GenerateNotificationIdAsync();
 

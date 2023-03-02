@@ -17,6 +17,7 @@ namespace TaskIt.Data
         public TaskContext() {
             SQLitePCL.Batteries_V2.Init();
 
+            this.Database.EnsureDeleted();
             this.Database.EnsureCreated();
         }
 
@@ -33,6 +34,17 @@ namespace TaskIt.Data
                     .Cast<DaysOfWeek>()
                     .ToList()
               );
+
+            // UserTask.Notification.NotificationIds
+            modelBuilder.Entity<Notification>()
+                .Property(r => r.NotificationIds)
+                .HasConversion(
+                    v => string.Join('.', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(e => int.Parse(e))
+                    .Cast<int>()
+                    .ToList()
+                );
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

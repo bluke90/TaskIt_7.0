@@ -14,6 +14,7 @@ public partial class NewTaskPage : ContentPage
 
 	private Dictionary<string, TimeSpan> RecurringTaskSelection = new Dictionary<string, TimeSpan>()
 	{
+		{"None", TimeSpan.MinValue },
         {"Once a day", TimeSpan.FromHours(24) },
         {"Twice a day", TimeSpan.FromHours(12) },
 		{"Every other day", TimeSpan.FromDays(2) },
@@ -38,6 +39,7 @@ public partial class NewTaskPage : ContentPage
 
 		selectionList = RecurringTaskSelection.Keys.ToList();
 		RepeatTaskInterval_entry.ItemsSource = selectionList;
+		RepeatTaskInterval_entry.SelectedIndex = 0;
 
 		IsRecurring.CheckedChanged += IsRecurring_Changed;
 
@@ -97,7 +99,9 @@ public partial class NewTaskPage : ContentPage
 
         if (UserTask.IsRecurring) {
 			UserTask.BuildRecurring();
-            UserTask.Recurring.RecurringInterval = RecurringTaskSelection.Where(m => m.Key == RepeatTaskInterval_entry.SelectedItem.ToString()).FirstOrDefault().Value;
+			if (RepeatTaskInterval_entry.SelectedIndex != 0) {
+				UserTask.Recurring.RecurringInterval = RecurringTaskSelection.Where(m => m.Key == RepeatTaskInterval_entry.SelectedItem.ToString()).FirstOrDefault().Value;
+            }
             UserTask.Recurring.NextOccurance = UserTask.StartDate + UserTask.Recurring.RecurringInterval;
             UserTask.Notification.StartDate = UserTask.StartDate - start;
             UserTask.Notification.RepeatInterval = UserTask.Recurring.RecurringInterval;
