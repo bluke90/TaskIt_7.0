@@ -23,6 +23,25 @@ namespace TaskIt.Mechanics
             _context = context;
         }
 
+        public async Task UpdateNotifications() {
+            _logger.LogInformation("[TaskUpdate Service] Starting UpdateNotifications Task...");
+            // Delay
+            await Task.Delay(100);
+
+            // Get Recurring Task
+            var list = await _context.UserTasks.Where(m => m.IsRecurring == true).ToListAsync();
+
+            // Update recurring notifications for selected days
+            foreach (var task in list) {
+                if (DateTime.Now > task.Notification.LastScheduleUpdate + TimeSpan.FromDays(7)) {
+                    var week2 = task.Notification.LastScheduleUpdate + TimeSpan.FromDays(14);
+                    var weekdifference = DateTime.Now - week2;
+                    await task.ScheduleNotificationAsync(weekdifference);
+                }
+            }
+
+        }
+
         public async Task UpdateNextOccurances() {
             _logger.LogInformation($"[TaskUpdateService] Starting UpdateNextOccurance Task...");
             // Delay and init taskUpdated count

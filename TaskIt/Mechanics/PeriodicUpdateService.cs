@@ -45,8 +45,10 @@ namespace TaskIt.Mechanics
                         TaskUpdateService updateService = asyncScope.ServiceProvider.GetRequiredService<TaskUpdateService>();
                     
                         // *** Start Update Actions here ***
-                            // 1. Update Next Occurances for Recurring Task
-                        await updateService.UpdateNextOccurances(); 
+                        // 1. Update Next Occurances for Recurring Task
+                        await updateService.UpdateNextOccurances();
+                        // 2. Reschedule Recurring updates
+                        await updateService.UpdateNotifications();
 
                         // *** End Update Actions ***
                         _executionCount++;

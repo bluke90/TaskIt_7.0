@@ -53,13 +53,17 @@ namespace TaskIt.Mechanics.Models
     public static class UserTaskExtensions 
     {
 
-        public static async Task ScheduleRecurringNotificationsAsync(this UserTask task) {
+        public static async Task ScheduleRecurringNotificationsAsync(this UserTask task, TimeSpan? DateTimeOverRide = null) {
+            task.Notification.LastScheduleUpdate = DateTime.Now;
+
+            DateTime scheduleTime = DateTimeOverRide.HasValue ? DateTime.Now + (TimeSpan)DateTimeOverRide : DateTime.Now;
+
             if (!task.IsRecurring) return;
 
             if (task.Recurring.SelectedDays.Count < 1) return;
 
             foreach (var day in task.Recurring.SelectedDays) {
-                DateTime notifyTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, task.Notification.StartDate.Hour, task.Notification.StartDate.Minute, 0);
+                DateTime notifyTime = new DateTime(scheduleTime.Year, scheduleTime.Month, 1, task.Notification.StartDate.Hour, task.Notification.StartDate.Minute, 0);
                 while (notifyTime.DayOfWeek != (DayOfWeek)day) {
                     notifyTime += TimeSpan.FromDays(1);
                 }
@@ -192,11 +196,11 @@ namespace TaskIt.Mechanics.Models
         /// </summary>
         /// <param name="task">ToDoTask to schedule notification for</param>
         /// <returns>The Notification ID</returns>
-        public static async Task<int> ScheduleNotificationAsync(this UserTask  task)
+        public static async Task<int> ScheduleNotificationAsync(this UserTask  task, TimeSpan? DateTimeOverride = null)
         {
 
             if (task.IsRecurring && task.Recurring.SelectedDays != null && task.Recurring.SelectedDays.Count > 0) {
-                await task.ScheduleRecurringNotificationsAsync();
+                await task.ScheduleRecurringNotificationsAsync(DateTimeOverride);
                 return 0;
             }
 
