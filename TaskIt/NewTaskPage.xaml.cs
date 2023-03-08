@@ -52,8 +52,14 @@ public partial class NewTaskPage : ContentPage
 		TaskDueTime_entry.Time = DateTime.Now.TimeOfDay;
 
 		AddDaysOfWeekSelection();
-    }
 
+		// Recurring options event handlers
+		HasStartDate.CheckedChanged += StartDateOptionChanged;
+		HasEndDate.CheckedChanged += EndDateOptionChanged;
+
+    }
+	
+	// Main task creation function
 	public async void CreateTaskClicked(object sender, EventArgs e) 
 	{
 		// run input checks
@@ -62,8 +68,8 @@ public partial class NewTaskPage : ContentPage
 		}
 
 		// Combine date and time pickers
-		DateTime modelEndDate = this.TaskDueDate_entry.Date + TaskDueTime_entry.Time;
-		DateTime modelStartDate = this.TaskStartDate_entry.Date + TaskStartTime_entry.Time;
+		DateTime modelEndDate = HasEndDate.IsChecked ? this.TaskDueDate_entry.Date + TaskDueTime_entry.Time : DateTime.MinValue + TaskDueTime_entry.Time;
+        DateTime modelStartDate = HasStartDate.IsChecked ?  this.TaskStartDate_entry.Date + TaskStartTime_entry.Time : DateTime.MinValue + TaskStartTime_entry.Time;
 				
 		// get selected repeat interval for notification ** maybe add this to a PickerChanged Event and assign to variable to increase performance **
 		var repeatIntervalSelectionVal = RepeatInterval_entry.SelectedItem.ToString();
@@ -244,8 +250,7 @@ public partial class NewTaskPage : ContentPage
 
     private void ShowRecurringTaskProperties() {
 		Dispatcher.Dispatch(() => {
-            DueDate_lbl.IsVisible = false;
-            DueDate_group.IsVisible = false;
+            DueDate_lbl.Text = "End Date";
             RepeatInterval_lbl.IsVisible = false;
             RepeatInterval_entry.IsVisible = false;
             RepeatTaskInterval_lbl.IsVisible = true;
@@ -254,16 +259,54 @@ public partial class NewTaskPage : ContentPage
 			DaysOfWeek_lbl.IsVisible = true;
 			days_col_top.IsVisible = true;
 			days_col_bottom.IsVisible = true;
+			// Recurring options
+			RecurringOpt_1.IsVisible = true;
+            RecurringOpt_2.IsVisible = true;
+            TaskStartDate_entry.IsVisible = false;
+            TaskDueDate_entry.IsVisible = false;
         });
     }
     private void ShowNonRecurringTaskProperties() {
 		Dispatcher.Dispatch(() => {
-            DueDate_lbl.IsVisible = true;
-            DueDate_group.IsVisible = true;
+            DueDate_lbl.Text = "Due Date";
             RepeatInterval_lbl.IsVisible = true;
             RepeatInterval_entry.IsVisible = true;
             RepeatTaskInterval_lbl.IsVisible = false;
             RepeatTaskInterval_entry.IsVisible = false;
+            // days of week selection
+            DaysOfWeek_lbl.IsVisible = false;
+            days_col_top.IsVisible = false;
+            days_col_bottom.IsVisible = false;
+            // Recurring options
+            RecurringOpt_1.IsVisible = false;
+            RecurringOpt_2.IsVisible = false;
+            TaskStartDate_entry.IsVisible = true;
+            TaskDueDate_entry.IsVisible = true;
         });
     }
+
+	private void StartDateOptionChanged(object sender, EventArgs args) {
+		switch (HasStartDate.IsChecked) {
+			case true:
+				TaskStartDate_entry.IsVisible = true;
+				break;
+			case false:
+                TaskStartDate_entry.IsVisible = false;
+                break;
+		}
+		return;
+	}
+
+    private void EndDateOptionChanged(object sender, EventArgs args) {
+        switch (HasEndDate.IsChecked) {
+            case true:
+				TaskDueDate_entry.IsVisible = true;
+                break;
+            case false:
+                TaskDueDate_entry.IsVisible = false;
+                break;
+        }
+        return;
+    }
+
 }

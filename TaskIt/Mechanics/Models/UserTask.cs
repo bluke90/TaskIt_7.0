@@ -25,6 +25,7 @@ namespace TaskIt.Mechanics.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime NextOccurance { get; set; }
+        // add duration
     }
 
     public class Recurring

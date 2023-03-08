@@ -68,11 +68,30 @@
         </HorizontalStackLayout>
         <HorizontalStackLayout x:Name="days_col_bottom" IsVisible="false" Spacing="4">
         </HorizontalStackLayout>
-
+        
             <!-- Recurring Task CheckBox -->
-        <Label Text="Recurring Task?" TextColor="White" FontSize="16" FontAttributes="Bold"/>
-        <CheckBox x:Name="IsRecurring" Color="White" HorizontalOptions="Start"/>
-        <!-- Recurring task interval -->
+
+            <HorizontalStackLayout Spacing="25">
+                <Frame BackgroundColor="Transparent" BorderColor="Transparent" Padding="0">
+                    <VerticalStackLayout>
+                        <Label Text="Recurring Task?" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                        <CheckBox x:Name="IsRecurring" Color="White" HorizontalOptions="Start"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame BackgroundColor="Transparent" BorderColor="Transparent" Padding="0" x:Name="RecurringOpt_1" IsVisible="false">
+                    <VerticalStackLayout>
+                        <Label Text="End Date?" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                        <CheckBox x:Name="HasEndDate" Color="White" HorizontalOptions="Start"/>
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame BackgroundColor="Transparent" BorderColor="Transparent" Padding="0" x:Name="RecurringOpt_2" IsVisible="false">
+                    <VerticalStackLayout>
+                        <Label Text="Start Date?" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                        <CheckBox x:Name="HasStartDate" Color="White" HorizontalOptions="Start"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </HorizontalStackLayout>
+            <!-- Recurring task interval -->
         <Label x:Name="RepeatTaskInterval_lbl" Text="Repeat Task:" FontAttributes="Bold" TextColor="White" FontSize="16" IsVisible="false"/>
         <Picker HorizontalTextAlignment="Center" x:Name="RepeatTaskInterval_entry" Title="Select a How ofter to repeat task" BackgroundColor="White" TextColor="Black" IsVisible="false"/>
             <!-- Repeat Notification Selection -->
