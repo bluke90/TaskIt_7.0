@@ -24,6 +24,7 @@ namespace TaskIt.Mechanics.Models
 #nullable enable
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public DateTime NextOccurance { get; set; }
     }
 
     public class Recurring
@@ -33,7 +34,6 @@ namespace TaskIt.Mechanics.Models
         // public DaysOfWeek SelectedDays { get; set; }
         public ICollection<DaysOfWeek>? SelectedDays { get; set; }
         public int RepeatOnSelectedDay { get; set; }
-        public DateTime NextOccurance { get; set; }
     }
 
     public class NonRecurring
@@ -132,10 +132,23 @@ namespace TaskIt.Mechanics.Models
         /// <returns>DateTime of next occurance</returns>
         public static DateTime GetNextOccuranceOfTask(this UserTask task)
         {
+            if (!task.IsRecurring || task.Recurring == null) return task.EndDate;
 
             // Init the next occurance var; add 25sec to account for UI refreash period
             DateTime nextOccurance = task.StartDate + TimeSpan.FromSeconds(25);
 
+            // check to see if non interval
+            if (task.Recurring.RecurringInterval == TimeSpan.Zero) {
+                var today = (DaysOfWeek)DateTime.Now.DayOfWeek;
+
+                while (true) {
+                    nextOccurance += TimeSpan.FromDays(1);
+                    if (task.Recurring.SelectedDays.Contains((DaysOfWeek)nextOccurance.DayOfWeek)) {
+                        break;
+                    }
+                }
+                return nextOccurance;
+            }
             // Continue to add the repeat interval to nextOccurance until it is greater than the current time
             while (nextOccurance < DateTime.Now) {
                 nextOccurance += task.Recurring.RecurringInterval;

@@ -39,7 +39,7 @@ public partial class TaskViewPage : ContentPage
         startDate_label.Text = $"{_task.StartDate.ToShortDateString()} {_task.StartDate.ToShortTimeString()}";
         switch (_task.IsRecurring) {
 			case true:
-                nextDate_label.Text = $"{_task.Recurring.NextOccurance.ToShortDateString()} {_task.Recurring.NextOccurance.ToShortTimeString()}";
+                nextDate_label.Text = $"{_task.NextOccurance.ToShortDateString()} {_task.NextOccurance.ToShortTimeString()}";
                 break;
 			case false:
                 dueDate_label.Text = $"{_task.EndDate.ToShortDateString()} {_task.EndDate.ToShortTimeString()}";

@@ -26,7 +26,8 @@ namespace TaskIt.Mechanics
             
             // Get list of task for date
             var list = context.UserTasks
-                .Where(m => m.EndDate.Date == date.Date || m.Recurring.NextOccurance.Date == date.Date)
+                .Include(m => m.Recurring)
+                .Where(m => m.EndDate.Date == date.Date || m.NextOccurance.Date == date.Date)
                 .ToList();
             // return list
             return list;

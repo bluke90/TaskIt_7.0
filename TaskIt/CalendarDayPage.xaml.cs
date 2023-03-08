@@ -11,9 +11,10 @@ public partial class CalendarDayPage : ContentPage
 	private readonly TaskContext _context;
 
 	private List<UserTask> DaysTasks { get; set; }
-
+	private DateTime _dateTime { get; set; }
 	public CalendarDayPage(TaskContext context, DateTime date)
 	{
+		_dateTime = date;
 		_context = context;
 		DaysTasks = _context.GetTaskForDate(date);
 		DaysTasks = DaysTasks.OrderByNextOccurance();
@@ -25,8 +26,18 @@ public partial class CalendarDayPage : ContentPage
 	public void PopulateTask() {
 		if (DaysTasks.Count < 1) { return; }
 
+		var previous_t = _dateTime.Date;
 		foreach (var task in DaysTasks) {
-			var frame = GenerateTaskSlot(task);
+
+            if (task.NextOccurance > previous_t) {
+                var t_end = task.NextOccurance;
+                var t_start = previous_t;
+                var free_frame = GenerateFreeSlot(t_start, t_end);
+                taskStack.Add(free_frame);
+            }
+			previous_t = task.NextOccurance;
+
+            var frame = GenerateTaskSlot(task);
 			HorizontalStackLayout stack = (HorizontalStackLayout)frame.Content;
             var btn = new TapGestureRecognizer()
             {
@@ -39,6 +50,39 @@ public partial class CalendarDayPage : ContentPage
 		}
 	}
 
+	public static Frame GenerateFreeSlot(DateTime start, DateTime end) {
+		var frame = new Frame
+		{
+			BorderColor = Colors.Blue,
+			CornerRadius = 5,
+			BackgroundColor = Colors.LightBlue,
+			Opacity = 80
+		};
+
+		var stack = new HorizontalStackLayout
+		{
+			Spacing = 40
+		};
+		var titleLbl = new Label
+		{
+			Text = $"Free Time:",
+			TextColor = Colors.Black,
+			HorizontalOptions = LayoutOptions.Start,
+			VerticalOptions = LayoutOptions.Center,
+			FontAttributes = FontAttributes.Bold
+		};
+		stack.Add(titleLbl);
+		var dtLbl = new Label
+		{
+			Text = $"{start.ToString("h:mm tt")} - {end.ToString("h:mm tt")}",
+			HorizontalOptions = LayoutOptions.End,
+			VerticalOptions = LayoutOptions.Center
+		};
+		stack.Add(dtLbl);
+
+		frame.Content = stack;
+		return frame;
+	}
 
 	public static Frame GenerateTaskSlot(UserTask task) {
 

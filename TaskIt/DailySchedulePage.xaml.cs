@@ -10,6 +10,10 @@ public partial class DailySchedulePage : ContentPage
 
     private List<UserTask> Tasks { get; set; }
 
+    private List<TimeSpan> NonOccupiedTimes { get; set; }
+
+    // Create timeline
+
     private List<string> FilterOptions = new List<string>()
     {
         "Start Date",
@@ -19,6 +23,7 @@ public partial class DailySchedulePage : ContentPage
 
     public DailySchedulePage(TaskContext context) {
         _context = context;
+        NonOccupiedTimes  = new List<TimeSpan>();
         
         InitializeComponent();
 

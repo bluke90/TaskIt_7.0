@@ -102,13 +102,14 @@ public partial class NewTaskPage : ContentPage
 			if (RepeatTaskInterval_entry.SelectedIndex != 0) {
 				UserTask.Recurring.RecurringInterval = RecurringTaskSelection.Where(m => m.Key == RepeatTaskInterval_entry.SelectedItem.ToString()).FirstOrDefault().Value;
             }
-            UserTask.Recurring.NextOccurance = UserTask.StartDate + UserTask.Recurring.RecurringInterval;
+            UserTask.NextOccurance = UserTask.StartDate + UserTask.Recurring.RecurringInterval;
             UserTask.Notification.StartDate = UserTask.StartDate - start;
             UserTask.Notification.RepeatInterval = UserTask.Recurring.RecurringInterval;
 			UserTask.Recurring.SelectedDays = SelectedDays;
         } else {
 			UserTask.BuildNonRecurring();
 			UserTask.StartDate = modelStartDate + UserTask.Notification.RepeatInterval;
+			UserTask.NextOccurance = UserTask.StartDate;
             UserTask.Notification.RepeatInterval = repeat;
             UserTask.Notification.StartDate = UserTask.Notification.RepeatInterval > TimeSpan.Zero ? modelStartDate + repeat : modelStartDate;
         }
