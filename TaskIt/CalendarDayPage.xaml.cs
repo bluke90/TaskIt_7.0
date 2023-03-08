@@ -34,7 +34,7 @@ public partial class CalendarDayPage : ContentPage
                 var t_start = previous_t;
                 var free_frame = GenerateFreeSlot(t_start, t_end);
                 taskStack.Add(free_frame);
-            }
+            } 
 			previous_t = task.NextOccurance;
 
             var frame = GenerateTaskSlot(task);
@@ -112,7 +112,7 @@ public partial class CalendarDayPage : ContentPage
 		// label time
 		var dtLbl = new Label
 		{
-			Text = task.IsRecurring ? task.GetNextOccuranceOfTask().ToString() : task.EndDate.ToString(),
+			Text = $"{task.NextOccurance.ToString("h:mm tt")} - {task.EndDate.ToString("h:mm tt")}",
 			HorizontalOptions = LayoutOptions.End,
 			VerticalOptions = LayoutOptions.Center
 		};
