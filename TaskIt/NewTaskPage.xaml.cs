@@ -30,33 +30,33 @@ public partial class NewTaskPage : ContentPage
 		//_mainPage = mainPage;
 		InitializeComponent();
 		_context = new TaskContext();
+		// Populate RepeatInterval Selection
 		var selectionList = ToDoTaskUtils.RepeatIntervalSelection.Keys.ToList();
         RepeatInterval_entry.ItemsSource = selectionList;
 		RepeatInterval_entry.SelectedIndex = 0;
-
+		// Populate NotificaitonStartDate Selection
 		selectionList = ToDoTaskUtils.NotificationStartDateSelection.Keys.ToList();
 		StartNotification_entry.ItemsSource = selectionList;
-
+		// Populate RecurringTask Selection
 		selectionList = RecurringTaskSelection.Keys.ToList();
 		RepeatTaskInterval_entry.ItemsSource = selectionList;
 		RepeatTaskInterval_entry.SelectedIndex = 0;
+        
+		AddDaysOfWeekSelection();
 
-		IsRecurring.CheckedChanged += IsRecurring_Changed;
-
+        // Set Event Handlers
+        IsRecurring.CheckedChanged += IsRecurring_Changed;
 		_context.SaveChangesFailed += SaveChangesFailed_Event;
-		
-		// set defualt date & time selections
-		TaskStartDate_entry.Date = DateTime.Now;
+
+        // Recurring options event handlers
+        HasStartDate.CheckedChanged += StartDateOptionChanged;
+        HasEndDate.CheckedChanged += EndDateOptionChanged;
+
+        // set defualt date & time selections
+        TaskStartDate_entry.Date = DateTime.Now;
 		TaskStartTime_entry.Time = DateTime.Now.TimeOfDay;
         TaskDueDate_entry.Date = DateTime.Now + TimeSpan.FromDays(1);
 		TaskDueTime_entry.Time = DateTime.Now.TimeOfDay;
-
-		AddDaysOfWeekSelection();
-
-		// Recurring options event handlers
-		HasStartDate.CheckedChanged += StartDateOptionChanged;
-		HasEndDate.CheckedChanged += EndDateOptionChanged;
-
     }
 	
 	// Main task creation function
@@ -102,7 +102,7 @@ public partial class NewTaskPage : ContentPage
 			StartDate = modelStartDate,
 			EndDate = modelEndDate
         };
-
+		// Configure recurring and non-recurring
         if (UserTask.IsRecurring) {
 			UserTask.BuildRecurring();
 			if (RepeatTaskInterval_entry.SelectedIndex != 0) {
@@ -152,6 +152,7 @@ public partial class NewTaskPage : ContentPage
 				DisplayAlert("Title Invalid", "You're title either has no characters or not enough characters, please enter a new title and try again", "Okay");
 				return false;
 			}
+			// Exception handling
 		} catch (NullReferenceException nre) {
 			Console.WriteLine(nre.ToString());
             DisplayAlert("Title Invalid", "You're title either has no characters or not enough characters, please enter a new title and try again", "Okay");
@@ -171,6 +172,7 @@ public partial class NewTaskPage : ContentPage
 	/// <param name="task">Task to verify saved</param>
 	/// <returns></returns>
 	private async Task VerifyTaskSaved(UserTask task) {
+		// If task not saved, save again
 		if (!_context.UserTasks.Any(m => m.Id == task.Id)) {
 			await _context.UserTasks.AddAsync(task);
 			await _context.SaveChangesAsync();
@@ -204,7 +206,9 @@ public partial class NewTaskPage : ContentPage
 	}
 
 	private Frame BuildDaySelectionFrame(DaysOfWeek Day) {
-        var frame = new Frame()
+        
+		// Day Frame
+		var frame = new Frame()
         {
             BorderColor = Colors.Black,
             BackgroundColor = Colors.White,
@@ -212,7 +216,7 @@ public partial class NewTaskPage : ContentPage
 			Padding = new Thickness(12,14),
 			BindingContext = Day
         };
-
+		// Day Lable
         var dayLbl = new Label()
         {
             Text = Day.ToString(),
@@ -220,15 +224,14 @@ public partial class NewTaskPage : ContentPage
             FontAttributes = FontAttributes.Bold,
 			FontSize = 14
         };
-
+		// Content
         frame.Content = dayLbl;
-
+		// Create Recognizer (Button) 
         var recognizer = new TapGestureRecognizer()
 		{
 			Command = new Command<Frame>(DaySelected),
 			CommandParameter = frame
         };
-
         frame.GestureRecognizers.Add(recognizer);
 
 		return frame;
