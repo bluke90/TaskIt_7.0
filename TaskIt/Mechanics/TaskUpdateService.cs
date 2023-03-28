@@ -56,7 +56,6 @@ namespace TaskIt.Mechanics
                 if (task.NextOccurance < DateTime.Now) {     // If current date is past the stored NextOccurance THEN update
                     task.NextOccurance = task.GetNextOccuranceOfTask();
                     taskUpdated++;
-                    _context.Entry(task).State = EntityState.Modified;
                 }
             }
             
