@@ -13,7 +13,7 @@ namespace TaskIt.Mechanics
     /// </summary>
     public class PeriodicUpdateService : BackgroundService
     {
-        private readonly TimeSpan _period = TimeSpan.FromSeconds(5);    // Period between each update
+        private readonly TimeSpan _period = TimeSpan.FromSeconds(15);    // Period between each update
         private readonly ILogger<PeriodicUpdateService> _logger;
         private readonly IServiceScopeFactory _factory;
         private int _executionCount = 0;    // Amount of times loop was executed
