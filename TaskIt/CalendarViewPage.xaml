@@ -4,6 +4,5 @@
              x:Class="TaskIt.CalendarViewPage"
              Title="CalendarViewPage"
              BackgroundColor="#353535">
-    
 
 </ContentPage>
