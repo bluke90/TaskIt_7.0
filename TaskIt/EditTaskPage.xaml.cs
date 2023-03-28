@@ -1,8 +1,9 @@
-using Android.App;
+using Microsoft.EntityFrameworkCore;
 using Plugin.LocalNotification.Json;
 using TaskIt.Data;
 using TaskIt.Mechanics;
 using TaskIt.Mechanics.Models;
+using static TaskIt.Mechanics.Utilities;
 
 namespace TaskIt;
 
@@ -12,28 +13,45 @@ public partial class EditTaskPage : ContentPage
 
 	private UserTask _task { get; set; }
 
-	public EditTaskPage(TaskContext context, int taskId) {
+    private Dictionary<string, TimeSpan> RecurringTaskSelection = new Dictionary<string, TimeSpan>()
+    {
+        {"None", TimeSpan.MinValue },
+        {"Once a day", TimeSpan.FromHours(24) },
+        {"Twice a day", TimeSpan.FromHours(12) },
+        {"Every other day", TimeSpan.FromDays(2) },
+        {"Once a week", TimeSpan.FromDays(7) },
+        {"Once a Month", TimeSpan.FromDays(30) },
+        {"Twice a Month", TimeSpan.FromDays(15) }
+    };
+
+    private List<DaysOfWeek> SelectedDays = new List<DaysOfWeek>();
+
+    public EditTaskPage(TaskContext context, int taskId) {
         _context = context;
-        _task = _context.UserTasks.FirstOrDefault(m => m.Id == taskId);
+        _task = _context.UserTasks.Include(m => m.Notification).FirstOrDefault(m => m.Id == taskId);
 		InitializeComponent();
 		PopulateData();
 
-		RepeatInterval_entry.ItemsSource = ToDoTaskUtils.RepeatIntervalSelection.Keys.ToList();
-		StartNotification_entry.ItemsSource = ToDoTaskUtils.NotificationStartDateSelection.Keys.ToList();
-		foreach (var item in ToDoTaskUtils.RepeatIntervalSelection) {
-			if (item.Value == _task.Notification.RepeatInterval) {
-				RepeatInterval_entry.SelectedItem = item.Key;
-			}
-		}
+        // Populate RepeatInterval Selection
+        var selectionList = ToDoTaskUtils.RepeatIntervalSelection.Keys.ToList();
+        RepeatInterval_entry.ItemsSource = selectionList;
+		RepeatInterval_entry.SelectedItem = object.ReferenceEquals(_task.Notification.RepeatInterval, null) ? 0 : ToDoTaskUtils.RepeatIntervalSelection.Where(m => m.Value == _task.Notification.RepeatInterval).First().Key;
+        // Populate NotificaitonStartDate Selection
+        selectionList = ToDoTaskUtils.NotificationStartDateSelection.Keys.ToList();
+        StartNotification_entry.ItemsSource = selectionList;
         TimeSpan timespan = _task.EndDate - _task.Notification.StartDate;
         foreach (var item in ToDoTaskUtils.NotificationStartDateSelection) {
 			if (item.Value == timespan) {
 				StartNotification_entry.SelectedItem = item.Key;
 			}
 		}
-	}
+        // Populate RecurringTask Selection
+        // selectionList = RecurringTaskSelection.Keys.ToList();
+        // RepeatTaskInterval_entry.ItemsSource = selectionList;
+        // RepeatTaskInterval_entry.SelectedIndex = 0;
+    }
 
-	private void PopulateData() {
+    private void PopulateData() {
 		TaskName_entry.Text = _task.Name;
 		TaskNotes_entry.Text = _task.Notes;
 		TaskDueDate_entry.Date = _task.EndDate;
