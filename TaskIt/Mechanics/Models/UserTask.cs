@@ -55,6 +55,7 @@ namespace TaskIt.Mechanics.Models
     {
 
         public static async Task ScheduleRecurringNotificationsAsync(this UserTask task, TimeSpan? DateTimeOverRide = null) {
+
             task.Notification.LastScheduleUpdate = DateTime.Now;
 
             DateTime scheduleTime = DateTimeOverRide.HasValue ? DateTime.Now + (TimeSpan)DateTimeOverRide : DateTime.Now;
@@ -141,10 +142,10 @@ namespace TaskIt.Mechanics.Models
             // check to see if non interval
             if (task.Recurring.RecurringInterval == TimeSpan.Zero) {
                 var today = (DaysOfWeek)DateTime.Now.DayOfWeek;
-
+                nextOccurance += TimeSpan.FromDays(1);
                 while (true) {
                     nextOccurance += TimeSpan.FromDays(1);
-                    if (task.Recurring.SelectedDays.Contains((DaysOfWeek)nextOccurance.DayOfWeek)) {
+                    if (task.Recurring.SelectedDays.Contains((DaysOfWeek)nextOccurance.DayOfWeek) && nextOccurance >= DateTime.Today) {
                         break;
                     }
                 }
