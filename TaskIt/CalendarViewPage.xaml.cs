@@ -1,3 +1,4 @@
+using Android.Graphics.Fonts;
 using TaskIt.Data;
 using TaskIt.Mechanics;
 
@@ -42,18 +43,41 @@ public partial class CalendarViewPage : ContentPage
         }
 
         // create rows for grid
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 8; i++) {
             calendarGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
         }
 
+        // Month Label
+        var mnthLblFrame = new Frame()
+        {
+            BackgroundColor = Color.FromArgb("#121212"),
+            Margin = new Thickness(0),
+            Padding = new Thickness(15,7)
+        };
+
+        var mnthLbl = new Label()
+        {
+            Text = DateTime.Now.ToString("Y"),
+            TextColor = Colors.White,
+            FontAttributes = FontAttributes.Bold,
+            FontSize = 25,
+            HorizontalOptions = LayoutOptions.Center
+
+        };
+        mnthLblFrame.Content = mnthLbl;
+        Grid.SetRowSpan(mnthLblFrame, 1);
+        Grid.SetColumnSpan(mnthLblFrame, 7);
+        calendarGrid.Add(mnthLblFrame, 0, 0);
+        
+        
 
         for (int i = 0; i < 7; i++) {
             var label = GetLabelForGridSpace(i);
 
             // Add label to grid         
-            calendarGrid.Add(label, i, 0);
+            calendarGrid.Add(label, i, 1);
         }
-
+        // Set DateTime Variables
         DateTime current_DateTime = DateTime.Now;
         int current_Month = current_DateTime.Month;
         int current_Year = current_DateTime.Year;
@@ -62,8 +86,13 @@ public partial class CalendarViewPage : ContentPage
         int numDaysInMonth = DateTime.DaysInMonth(current_Year, current_Month);
         // Generate Grid Spaces
         for (int i = 1; i <= numDaysInMonth; i++) {
+           // Create Frame
             var frame = new DateTime(current_Year, current_Month, i).Date == DateTime.Now.Date ? GetGridSpaceFrame(true) : GetGridSpaceFrame();
+            
+            // Create StackLayout (Frame Content)
             var stack = new VerticalStackLayout();
+            
+            // Day # label
             var label = new Label
             {
                 Text = i.ToString(),
@@ -73,7 +102,8 @@ public partial class CalendarViewPage : ContentPage
                 FontAttributes = FontAttributes.Bold
             };
             stack.Add(label);
-            // Num task for date label
+
+            // Number of task for date label
             int numTaskForDate = 0;
             numTaskForDate = _context.GetTaskForDate(new DateTime(current_Year, current_Month, i)).Count;
             if (numTaskForDate > 0) {
@@ -89,21 +119,20 @@ public partial class CalendarViewPage : ContentPage
                 };
                 stack.Add(numTaskLbl);
             }
+            // Make Day Grid Space a button
             var btn = new TapGestureRecognizer()
             {
                 Command = new Command<DateTime>(Button_Tapped),
                 CommandParameter = new DateTime(current_Year, current_Month, i)
             };
             stack.GestureRecognizers.Add(btn);
-
+            // Set Frame content
             frame.Content = stack;
-
-            calendarGrid.Add(frame, (i + firstDayOfWeek - 1) % 7, (i + firstDayOfWeek - 1) / 7 + 1);
+            // Add to calednar Grid
+            calendarGrid.Add(frame, (i + firstDayOfWeek - 1) % 7, (i + firstDayOfWeek-1) / 7 + 2);
         }
-
+        // Set page content
         Content = calendarGrid;
-
-
     }
 
     private async void Button_Tapped(DateTime date) {
