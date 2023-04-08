@@ -78,7 +78,12 @@ namespace TaskIt.Mechanics
         /// </summary>
         /// <param name="task">Task object to reschedule notification for</param>
         public static async Task RescheduleTaskNotifcationAsync(this UserTask task) {
-            CancelNotification(task.Notification.Id);
+            try {
+                foreach (var id in task.Notification.NotificationIds) CancelNotification(id);
+            } catch (Exception Ex) {
+                Console.WriteLine("[RescheduleTaskNotificationAsync] UserTask.Notification.NotifcationIds object not set to instance...");
+            }
+
             await task.ScheduleNotificationAsync();
         }
 
