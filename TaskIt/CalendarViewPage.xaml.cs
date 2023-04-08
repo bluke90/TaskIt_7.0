@@ -1,4 +1,3 @@
-using Android.Graphics.Fonts;
 using TaskIt.Data;
 using TaskIt.Mechanics;
 
