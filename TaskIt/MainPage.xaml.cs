@@ -95,7 +95,7 @@ public partial class MainPage : ContentPage
 
 			var label_due = new Label()
 			{
-				Text = $"{task.EndDate.ToString("M/d/y h:mm tt")}",
+				Text = $"{task.StartDate.ToString("M/d/y h:mm tt")}",
 				VerticalOptions = LayoutOptions.End,
 				TextColor = Colors.White
 			};
