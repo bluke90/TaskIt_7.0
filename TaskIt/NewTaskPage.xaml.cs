@@ -68,8 +68,8 @@ public partial class NewTaskPage : ContentPage
 		}
 
 		// Combine date and time pickers
-		DateTime modelEndDate = HasEndDate.IsChecked ? this.TaskDueDate_entry.Date + TaskDueTime_entry.Time : DateTime.MinValue + TaskDueTime_entry.Time;
-        DateTime modelStartDate = HasStartDate.IsChecked ?  this.TaskStartDate_entry.Date + TaskStartTime_entry.Time : DateTime.MinValue + TaskStartTime_entry.Time;
+		DateTime modelEndDate = !HasEndDate.IsChecked && IsRecurring.IsChecked ? DateTime.MinValue + TaskDueTime_entry.Time : this.TaskDueDate_entry.Date + TaskDueTime_entry.Time;
+        DateTime modelStartDate = !HasStartDate.IsChecked && IsRecurring.IsChecked ? DateTime.MinValue + TaskStartTime_entry.Time : this.TaskStartDate_entry.Date + TaskStartTime_entry.Time;
 				
 		// get selected repeat interval for notification ** maybe add this to a PickerChanged Event and assign to variable to increase performance **
 		var repeatIntervalSelectionVal = RepeatInterval_entry.SelectedItem.ToString();
@@ -112,6 +112,7 @@ public partial class NewTaskPage : ContentPage
             UserTask.Notification.StartDate = UserTask.StartDate - start;
             UserTask.Notification.RepeatInterval = UserTask.Recurring.RecurringInterval;
 			UserTask.Recurring.SelectedDays = SelectedDays;
+			UserTask.EndDate = HasEndDate.IsChecked ? modelEndDate : (DateTime.MinValue + modelEndDate.TimeOfDay);
         } else {
 			UserTask.BuildNonRecurring();
 			UserTask.StartDate = modelStartDate + UserTask.Notification.RepeatInterval;
