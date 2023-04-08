@@ -74,14 +74,14 @@ namespace TaskIt.Mechanics.Models
                 for (int i = 0; i < 2; i++) {
 
                     // Generate a unique notification id for the task
-                    await task.GenerateNotificationIdAsync();
+                    var notif_id = await task.GenerateNotificationIdAsync();
 
                     // Create the title and message for the notification
                     string title = $"To Do Task: {task.Name}";
                     string msg = $"Task Due on {notifyTime.ToString("g")}";
 
                     // Schedule the notification with the generated id, title, message, and task details
-                    var request = NotificationService.ScheduleNotification(task.Notification.Id, title, msg, 42, task.Notification.StartDate, task.Notification.RepeatInterval);
+                    var request = NotificationService.ScheduleNotification(notif_id, title, msg, 42, task.Notification.StartDate, task.Notification.RepeatInterval);
 
                     // -- Debug: Prints the notification information to the console 
                     task.Debug_PrintNotificationInfoToConsole(request);
@@ -187,8 +187,13 @@ namespace TaskIt.Mechanics.Models
         /// </summary>
         /// <param name="task">ToDoTask to set the notificationId for</param>
         /// <returns>Task Object</returns>
-        public static async Task GenerateNotificationIdAsync(this UserTask task)
+        public static async Task<int> GenerateNotificationIdAsync(this UserTask task)
         {
+            // Check NotificationIds Collection exist
+            if (task.Notification.NotificationIds == null) {
+                task.Notification.NotificationIds = new List<int> { };
+            }
+
             // Initialize the id variable and random number generator
             Random rand = new Random();
             int id;
@@ -203,7 +208,9 @@ namespace TaskIt.Mechanics.Models
             } while (await NotificationService.CheckIfNotificationIdExistAsync(id));
 
             // Set task.NotificationId
-            task.Notification.Id = id;
+            // task.Notification.Id = id;
+            task.Notification.NotificationIds.Add(id);
+            return id;
         }
 
         /// <summary>
@@ -211,27 +218,28 @@ namespace TaskIt.Mechanics.Models
         /// </summary>
         /// <param name="task">ToDoTask to schedule notification for</param>
         /// <returns>The Notification ID</returns>
-        public static async Task<int> ScheduleNotificationAsync(this UserTask  task, TimeSpan? DateTimeOverride = null)
+        public static async Task<List<int>> ScheduleNotificationAsync(this UserTask  task, TimeSpan? DateTimeOverride = null)
         {
+            
 
             if (task.IsRecurring && task.Recurring.SelectedDays != null && task.Recurring.SelectedDays.Count > 0) {
                 await task.ScheduleRecurringNotificationsAsync(DateTimeOverride);
-                return 0;
+                return null;
             }
 
             // Generate a unique notification id for the task
-            await task.GenerateNotificationIdAsync();
+            var id = await task.GenerateNotificationIdAsync();
 
             // Create the title and message for the notification
             string title = $"To Do Task: {task.Name}";
             string msg = $"Task Due on {task.EndDate.ToString("g")}";
 
             // Schedule the notification with the generated id, title, message, and task details
-            var request = NotificationService.ScheduleNotification(task.Notification.Id, title, msg, 42, task.Notification.StartDate, task.Notification.RepeatInterval);
+            var request = NotificationService.ScheduleNotification(id, title, msg, 42, task.Notification.StartDate, task.Notification.RepeatInterval);
             
             // -- Debug: Prints the notification information to the console 
             task.Debug_PrintNotificationInfoToConsole(request);
-            return task.Notification.Id;
+            return task.Notification.NotificationIds.ToList();
         }
 
         /// <summary>
@@ -239,10 +247,13 @@ namespace TaskIt.Mechanics.Models
         /// </summary>
         /// <param name="task">ToDoTask instance to get notification for</param>
         /// <returns>Notification Request for specified ToDoTask</returns>
-        public static async Task<NotificationRequest> GetNotificationAsync(this UserTask task) 
-        {
-            var notification = await NotificationService.GetNotificationAsync(task.Notification.Id);
-            return notification;
+        public static async Task<List<NotificationRequest>> GetNotificationAsync(this UserTask task) {
+            var list = new List<NotificationRequest>();
+            foreach (var id in task.Notification.NotificationIds) { 
+                var notification = await NotificationService.GetNotificationAsync(id);
+                list.Add(notification);
+            }
+            return list;
         }
 
         /// <summary>
@@ -278,17 +289,18 @@ namespace TaskIt.Mechanics.Models
     public static class DebugTaskUtils {
         public static async void PrintNotificationAsync(this UserTask task) {
 
-            var notification = await NotificationService.GetNotificationAsync(task.Notification.Id);
-            try { 
-                Console.WriteLine($"Notification Debug Details for NotificationID: {notification.NotificationId}"); 
-            } catch (NullReferenceException ex) {
-                Console.Write(ex.ToString());
-                Console.WriteLine(" | Mechanics/Models/ToDoTask.cs - PrintNotificationAsync()");
+            foreach (var id in task.Notification.NotificationIds) {
+                var notification = await NotificationService.GetNotificationAsync(id);
+                try {
+                    Console.WriteLine($"Notification Debug Details for NotificationID: {notification.NotificationId}");
+                } catch (NullReferenceException ex) {
+                    Console.Write(ex.ToString());
+                    Console.WriteLine(" | Mechanics/Models/ToDoTask.cs - PrintNotificationAsync()");
+                }
+                Console.WriteLine($"Title: {notification.Title}");
+                Console.WriteLine($"Description: {notification.Description}");
+                Console.WriteLine($"Notify time: {notification.Schedule.NotifyTime.ToString()}");
             }
-            Console.WriteLine($"Title: {notification.Title}");
-            Console.WriteLine($"Description: {notification.Description}");
-            Console.WriteLine($"Notify time: {notification.Schedule.NotifyTime.ToString()}");
-
         }
     }
 
