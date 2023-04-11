@@ -69,7 +69,7 @@ public partial class NewTaskPage : ContentPage
 
 		// Combine date and time pickers
 		DateTime modelEndDate = !HasEndDate.IsChecked && IsRecurring.IsChecked ? DateTime.MinValue + TaskDueTime_entry.Time : this.TaskDueDate_entry.Date + TaskDueTime_entry.Time;
-        DateTime modelStartDate = !HasStartDate.IsChecked && IsRecurring.IsChecked ? DateTime.MinValue + TaskStartTime_entry.Time : this.TaskStartDate_entry.Date + TaskStartTime_entry.Time;
+        DateTime modelStartDate = !HasStartDate.IsChecked && IsRecurring.IsChecked ? DateTime.Now + TaskStartTime_entry.Time : this.TaskStartDate_entry.Date + TaskStartTime_entry.Time;
 				
 		// get selected repeat interval for notification ** maybe add this to a PickerChanged Event and assign to variable to increase performance **
 		var repeatIntervalSelectionVal = RepeatInterval_entry.SelectedItem.ToString();
@@ -94,7 +94,7 @@ public partial class NewTaskPage : ContentPage
 			}
 		}
         // Set Base Info
-        UserTask = new UserTask()
+         UserTask = new UserTask()
         {
             Name = TaskName_entry.Text,
             Notes = TaskNotes_entry.Text,
