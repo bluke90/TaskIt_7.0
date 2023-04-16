@@ -29,8 +29,8 @@ namespace TaskIt.Data
                 .HasConversion(
                     v => string.Join(",", v.Select(e => e.ToString("D")).ToArray()),
                      v => v.Split(new[] { ',' })
-                    .Select(e => Enum.Parse(typeof(DaysOfWeek), e))
-                    .Cast<DaysOfWeek>()
+                    .Select(e => Enum.Parse(typeof(DayOfWeek), e))
+                    .Cast<DayOfWeek>()
                     .ToList()
               );
 

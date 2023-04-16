@@ -33,7 +33,7 @@ namespace TaskIt.Mechanics.Models
         public int Id { get; set; }
         public TimeSpan RecurringInterval { get; set; }
         // public DaysOfWeek SelectedDays { get; set; }
-        public ICollection<DaysOfWeek>? SelectedDays { get; set; }
+        public ICollection<DayOfWeek>? SelectedDays { get; set; }
         public int RepeatOnSelectedDay { get; set; }
     }
 
@@ -145,7 +145,7 @@ namespace TaskIt.Mechanics.Models
                 nextOccurance += TimeSpan.FromDays(1);
                 while (true) {
                     nextOccurance += TimeSpan.FromDays(1);
-                    if (task.Recurring.SelectedDays.Contains((DaysOfWeek)nextOccurance.DayOfWeek) && nextOccurance >= DateTime.Today) {
+                    if (task.Recurring.SelectedDays.Contains((DayOfWeek)nextOccurance.DayOfWeek) && nextOccurance >= DateTime.Today) {
                         break;
                     }
                 }
