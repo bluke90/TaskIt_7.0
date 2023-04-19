@@ -23,7 +23,7 @@ public partial class NewTaskPage : ContentPage
 		{"Twice a Month", TimeSpan.FromDays(15) }
 	};
 
-	private List<DaysOfWeek> SelectedDays = new List<DaysOfWeek>();
+	private List<DayOfWeek> SelectedDays = new List<DayOfWeek>();
 
 	public NewTaskPage()
 	{
@@ -240,13 +240,13 @@ public partial class NewTaskPage : ContentPage
 
 	public void DaySelected(Frame day) {
 		
-		switch (SelectedDays.Contains((DaysOfWeek)day.BindingContext)) {
+		switch (SelectedDays.Contains((DayOfWeek)day.BindingContext)) {
 			case true:
-				SelectedDays.Remove((DaysOfWeek)day.BindingContext);
+				SelectedDays.Remove((DayOfWeek)day.BindingContext);
 				day.BorderColor = Colors.Black;
                 break;
 			case false:
-				SelectedDays.Add((DaysOfWeek)day.BindingContext);
+				SelectedDays.Add((DayOfWeek)day.BindingContext);
 				day.BorderColor = Colors.Blue;
 				break;
 		}
